@@ -1,15 +1,14 @@
 package com.Sharvari.elearningPlatform.service;
 
-import com.Sharvari.elearningPlatform.exception.CourseNotFoundException;
 import com.Sharvari.elearningPlatform.model.Course;
-import com.Sharvari.elearningPlatform.model.Instructor;
+import com.Sharvari.elearningPlatform.model.Enrollment;
+import com.Sharvari.elearningPlatform.model.Student;
 import com.Sharvari.elearningPlatform.model.User;
 import com.Sharvari.elearningPlatform.util.IdGenerator;
-import com.Sharvari.elearningPlatform.util.InputValidator;
 
 import java.util.*;
 
-public class CourseService {
+public class EnrollmentService {
 
 
 }

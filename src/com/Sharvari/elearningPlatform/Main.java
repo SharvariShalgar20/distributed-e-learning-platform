@@ -1,8 +1,9 @@
 package com.Sharvari.elearningPlatform;
 
-import com.Sharvari.elearningPlatform.model.Course;
-import com.Sharvari.elearningPlatform.service.CourseService;
-import com.Sharvari.elearningPlatform.service.impl.CourseServiceImpl;
+import com.Sharvari.elearningPlatform.model.*;
+import com.Sharvari.elearningPlatform.service.*;
+
+import java.util.List;
 
 import java.util.Scanner;
 
