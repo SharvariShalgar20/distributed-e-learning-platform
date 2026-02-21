@@ -20,6 +20,7 @@ public class Main {
 
         initServices();
         loadDemoData();
+        printBanner();
     }
 
     private static void initServices() {
@@ -46,6 +47,14 @@ public class Main {
         System.out.println("   Instructor → mark@email.com  / mark123");
         System.out.println("  ──────────────────────────────────────────");
     }
+
+    private static void printBanner() {
+        System.out.println();
+        System.out.println("  ╔════════════════════════════════════════════╗");
+        System.out.println("  ║        E-LEARNING MANAGEMENT SYSTEM        ║");
+        System.out.println("  ╚════════════════════════════════════════════╝");
+    }
+
 
 
 }
