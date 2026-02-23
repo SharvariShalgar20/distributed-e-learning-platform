@@ -109,8 +109,8 @@ public class Main {
         try {
             switch (scanner.nextLine().trim()) {
                 case "1": doBrowseAndEnroll(student);     break;
-                //case "2": doViewEnrolledCourses(student); break;
-                //case "3": doUpdateProgress(student);      break;
+                case "2": doViewEnrolledCourses(student); break;
+                case "3": doUpdateProgress(student);      break;
                 //case "4": doDropCourse(student);          break;
                 //case "5": doTakeQuiz(student);            break;
                 //case "6": quizService.displayStudentScores(student.getUserId()); break;
@@ -171,6 +171,23 @@ public class Main {
         if (!cid.equals("0")) enrollmentService.enrollStudent(student.getUserId(), cid);
     }
 
+    private static void doViewEnrolledCourses(Student student) {
+        System.out.println("\n  ── My Enrolled Courses ───────────────");
+        enrollmentService.displayStudentProgress(student.getUserId());
+    }
+
+
+    private static void doUpdateProgress(Student student) {
+        System.out.println("\n  ── Update Progress ───────────────────");
+        enrollmentService.displayStudentProgress(student.getUserId());
+        System.out.print("  Enter Course ID: ");
+        String cid = scanner.nextLine().trim();
+        System.out.print("  New progress (0-100): ");
+        try {
+            double p = Double.parseDouble(scanner.nextLine().trim());
+            enrollmentService.updateProgress(student.getUserId(), cid, p);
+        } catch (NumberFormatException e) { System.out.println("  ✘ Invalid number."); }
+    }
 
 
 }
