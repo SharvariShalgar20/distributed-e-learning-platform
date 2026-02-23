@@ -83,7 +83,7 @@ public class Main {
         switch (scanner.nextLine().trim()) {
             case "1": doLogin();             break;
             case "2": doRegisterStudent();   break;
-            //case "3": doRegisterInstructor();break;
+            case "3": doRegisterInstructor();break;
             //case "4": doBrowseCourses();     break;
             //case "0": return false;
             default:  System.out.println("  ⚠ Invalid option.");
@@ -108,7 +108,15 @@ public class Main {
         catch (Exception e) { System.out.println("  ✘ " + e.getMessage()); }
     }
 
-
+    private static void doRegisterInstructor() {
+        System.out.println("\n  ── Register Instructor ───────────────");
+        System.out.print("  Name     : "); String name      = scanner.nextLine().trim();
+        System.out.print("  Email    : "); String email     = scanner.nextLine().trim();
+        System.out.print("  Password : "); String password  = scanner.nextLine().trim();
+        System.out.print("  Expertise: "); String expertise = scanner.nextLine().trim();
+        try { userService.registerInstructor(name, email, password, expertise); }
+        catch (Exception e) { System.out.println("  ✘ " + e.getMessage()); }
+    }
 
 
 
