@@ -21,6 +21,21 @@ public class Main {
         initServices();
         loadDemoData();
         printBanner();
+
+        boolean running = true;
+//        while (running) {
+//            if (currentUser == null) {
+//                running = showMainMenu();
+//            }
+//            else if (currentUser instanceof Student){
+//                showStudentMenu((Student) currentUser);
+//            }
+//            else if (currentUser instanceof Instructor) {
+//                showInstructorMenu((Instructor) currentUser);
+//            }
+//        }
+        System.out.println("\n  Thank you for using E-Learning Platform. Goodbye!\n");
+        scanner.close();
     }
 
     private static void initServices() {
@@ -54,6 +69,46 @@ public class Main {
         System.out.println("  ║        E-LEARNING MANAGEMENT SYSTEM        ║");
         System.out.println("  ╚════════════════════════════════════════════╝");
     }
+
+
+    private static boolean showMainMenu() {
+        System.out.println("\n  ┌─── MAIN MENU ────────────────────┐");
+        System.out.println("  │  1. Login                        │");
+        System.out.println("  │  2. Register as Student          │");
+        System.out.println("  │  3. Register as Instructor       │");
+        System.out.println("  │  4. Browse Published Courses     │");
+        System.out.println("  │  0. Exit                         │");
+        System.out.println("  └──────────────────────────────────┘");
+        System.out.print("  Choose: ");
+        switch (scanner.nextLine().trim()) {
+            case "1": doLogin();             break;
+            case "2": doRegisterStudent();   break;
+            //case "3": doRegisterInstructor();break;
+            //case "4": doBrowseCourses();     break;
+            //case "0": return false;
+            default:  System.out.println("  ⚠ Invalid option.");
+        }
+        return true;
+    }
+
+    private static void doLogin() {
+        System.out.println("\n  ── Login ─────────────────────────────");
+        System.out.print("  Email   : "); String email    = scanner.nextLine().trim();
+        System.out.print("  Password: "); String password = scanner.nextLine().trim();
+        try { currentUser = userService.login(email, password); }
+        catch (Exception e) { System.out.println("  ✘ " + e.getMessage()); }
+    }
+
+    private static void doRegisterStudent() {
+        System.out.println("\n  ── Register Student ──────────────────");
+        System.out.print("  Name    : "); String name     = scanner.nextLine().trim();
+        System.out.print("  Email   : "); String email    = scanner.nextLine().trim();
+        System.out.print("  Password: "); String password = scanner.nextLine().trim();
+        try { userService.registerStudent(name, email, password); }
+        catch (Exception e) { System.out.println("  ✘ " + e.getMessage()); }
+    }
+
+
 
 
 
