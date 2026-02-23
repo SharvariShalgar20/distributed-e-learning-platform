@@ -150,11 +150,11 @@ public class Main {
     }
 
     private static void doBrowseCourses() {
-        printCourseList(courseService.getPublishedCourses());
+        printCourseList("  ── Published Courses ─────────────────", courseService.getPublishedCourses());
     }
 
-    private static void printCourseList(List<Course> courses) {
-        System.out.println("\n" + "  ── Published Courses ─────────────────");
+    private static void printCourseList(String header, List<Course> courses) {
+        System.out.println("\n" + header);
 
         if(courses.isEmpty()) {
             System.out.println(" No courses found. ");
@@ -163,5 +163,14 @@ public class Main {
             System.out.println("  ──────────────────────────────────────");
         }
     }
+
+    private static void doBrowseAndEnroll(Student student) {
+        printCourseList("  ── Available Courses ─────────────────", courseService.getPublishedCourses());
+        System.out.print("  Enter Course ID to enroll (0 to cancel): ");
+        String cid = scanner.nextLine().trim();
+        if (!cid.equals("0")) enrollmentService.enrollStudent(student.getUserId(), cid);
+    }
+
+
 
 }
