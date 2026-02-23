@@ -84,7 +84,7 @@ public class Main {
             case "1": doLogin();             break;
             case "2": doRegisterStudent();   break;
             case "3": doRegisterInstructor();break;
-            //case "4": doBrowseCourses();     break;
+            case "4": doBrowseCourses();     break;
             //case "0": return false;
             default:  System.out.println("  ⚠ Invalid option.");
         }
@@ -118,6 +118,19 @@ public class Main {
         catch (Exception e) { System.out.println("  ✘ " + e.getMessage()); }
     }
 
+    private static void doBrowseCourses() {
+        printCourseList(courseService.getPublishedCourses());
+    }
 
+    private static void printCourseList(List<Course> courses) {
+        System.out.println("\n" + "  ── Published Courses ─────────────────");
+
+        if(courses.isEmpty()) {
+            System.out.println(" No courses found. ");
+        } else {
+            courses.forEach( c -> System.out.println("  "+c));
+            System.out.println("  ──────────────────────────────────────");
+        }
+    }
 
 }
