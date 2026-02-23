@@ -85,10 +85,41 @@ public class Main {
             case "2": doRegisterStudent();   break;
             case "3": doRegisterInstructor();break;
             case "4": doBrowseCourses();     break;
-            //case "0": return false;
+            case "0": return false;
             default:  System.out.println("  ⚠ Invalid option.");
         }
         return true;
+    }
+
+
+    private static void showStudentMenu(Student student) {
+        student.displayDashboard();
+        System.out.println("  ┌─── STUDENT MENU ─────────────────┐");
+        System.out.println("  │  1. Browse & Enroll in Courses   │");
+        System.out.println("  │  2. My Enrolled Courses          │");
+        System.out.println("  │  3. Update Course Progress       │");
+        System.out.println("  │  4. Drop a Course                │");
+        System.out.println("  │  5. Take a Quiz                  │");
+        System.out.println("  │  6. View My Quiz Scores          │");
+        System.out.println("  │  7. Search Courses               │");
+        System.out.println("  │  8. Change Password              │");
+        System.out.println("  │  0. Logout                       │");
+        System.out.println("  └──────────────────────────────────┘");
+        System.out.print("  Choose: ");
+        try {
+            switch (scanner.nextLine().trim()) {
+                case "1": doBrowseAndEnroll(student);     break;
+                //case "2": doViewEnrolledCourses(student); break;
+                //case "3": doUpdateProgress(student);      break;
+                //case "4": doDropCourse(student);          break;
+                //case "5": doTakeQuiz(student);            break;
+                //case "6": quizService.displayStudentScores(student.getUserId()); break;
+                //case "7": doSearchCourses();              break;
+                //case "8": doChangePassword(student);      break;
+                //case "0": logout();                       break;
+                default:  System.out.println("  ⚠ Invalid option.");
+            }
+        } catch (Exception e) { System.out.println("  ✘ Error: " + e.getMessage()); }
     }
 
     private static void doLogin() {
