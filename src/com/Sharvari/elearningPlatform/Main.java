@@ -111,7 +111,7 @@ public class Main {
                 case "1": doBrowseAndEnroll(student);     break;
                 case "2": doViewEnrolledCourses(student); break;
                 case "3": doUpdateProgress(student);      break;
-                //case "4": doDropCourse(student);          break;
+                case "4": doDropCourse(student);          break;
                 //case "5": doTakeQuiz(student);            break;
                 //case "6": quizService.displayStudentScores(student.getUserId()); break;
                 //case "7": doSearchCourses();              break;
@@ -126,8 +126,12 @@ public class Main {
         System.out.println("\n  ── Login ─────────────────────────────");
         System.out.print("  Email   : "); String email    = scanner.nextLine().trim();
         System.out.print("  Password: "); String password = scanner.nextLine().trim();
-        try { currentUser = userService.login(email, password); }
-        catch (Exception e) { System.out.println("  ✘ " + e.getMessage()); }
+        try {
+            currentUser = userService.login(email, password);
+        }
+        catch (Exception e) {
+            System.out.println("  ✘ " + e.getMessage());
+        }
     }
 
     private static void doRegisterStudent() {
@@ -187,6 +191,18 @@ public class Main {
             double p = Double.parseDouble(scanner.nextLine().trim());
             enrollmentService.updateProgress(student.getUserId(), cid, p);
         } catch (NumberFormatException e) { System.out.println("  ✘ Invalid number."); }
+    }
+
+    private static void doDropCourse(Student student) {
+        System.out.println("\n  ── Drop a Course ─────────────────────");
+        enrollmentService.displayStudentProgress(student.getUserId());
+        System.out.print("  Enter Course ID to drop (0 to cancel): ");
+        String cid = scanner.nextLine().trim();
+        if (!cid.equals("0")) {
+            System.out.print("  Are you sure? (yes/no): ");
+            if (scanner.nextLine().trim().equalsIgnoreCase("yes"))
+                enrollmentService.dropCourse(student.getUserId(), cid);
+        }
     }
 
 
