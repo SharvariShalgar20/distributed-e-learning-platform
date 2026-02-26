@@ -113,9 +113,9 @@ public class Main {
                 case "3": doUpdateProgress(student);      break;
                 case "4": doDropCourse(student);          break;
                 case "5": doTakeQuiz(student);            break;
-                //case "6": quizService.displayStudentScores(student.getUserId()); break;
-                //case "7": doSearchCourses();              break;
-                //case "8": doChangePassword(student);      break;
+                case "6": quizService.displayStudentScores(student.getUserId()); break;
+                case "7": doSearchCourses();              break;
+                case "8": doChangePassword(student);      break;
                 //case "0": logout();                       break;
                 default:  System.out.println("  ⚠ Invalid option.");
             }
@@ -226,6 +226,23 @@ public class Main {
         String qid = scanner.nextLine().trim();
         if (!qid.equals("0")) quizService.attemptQuiz(student.getUserId(), qid, scanner);
     }
+
+    private static void doSearchCourses() {
+        System.out.println("\n  Search by: 1) Title  2) Category");
+        System.out.print("  Choice: ");
+        String opt = scanner.nextLine().trim();
+        if (opt.equals("1")) {
+            System.out.print("  Keyword : ");
+            String kw = scanner.nextLine().trim();
+            printCourseList("  ── Results ───────────────────────────", courseService.searchCoursesByTitle(kw));
+        } else if (opt.equals("2")) {
+            System.out.print("  Category: "); String cat = scanner.nextLine().trim();
+            printCourseList("  ── Results ───────────────────────────", courseService.searchCoursesByCategory(cat));
+        }
+    }
+
+
+
 
 
 
