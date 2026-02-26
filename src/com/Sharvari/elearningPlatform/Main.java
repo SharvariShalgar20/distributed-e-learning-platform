@@ -112,7 +112,7 @@ public class Main {
                 case "2": doViewEnrolledCourses(student); break;
                 case "3": doUpdateProgress(student);      break;
                 case "4": doDropCourse(student);          break;
-                //case "5": doTakeQuiz(student);            break;
+                case "5": doTakeQuiz(student);            break;
                 //case "6": quizService.displayStudentScores(student.getUserId()); break;
                 //case "7": doSearchCourses();              break;
                 //case "8": doChangePassword(student);      break;
@@ -204,6 +204,30 @@ public class Main {
                 enrollmentService.dropCourse(student.getUserId(), cid);
         }
     }
+
+    private static void doTakeQuiz(Student student) {
+        System.out.println("\n  ── Take a Quiz ───────────────────────");
+        List<String> enrolled = student.getEnrolledCourseIds();
+
+        if (enrolled.isEmpty()) {
+            System.out.println("  Not enrolled in any courses.");
+            return;
+        }
+        System.out.println("  Your courses and quizzes:");
+        for (String cid : enrolled) {
+            try {
+                Course c = courseService.findById(cid);
+                System.out.println("  [" + cid + "] " + c.getTitle());
+                for (Quiz q : quizService.getQuizzesByCourse(cid))
+                    System.out.println("       → " + q.getQuizId() + " | " + q.getTitle());
+            } catch (Exception ignored) {}
+        }
+        System.out.print("  Enter Quiz ID (0 to cancel): ");
+        String qid = scanner.nextLine().trim();
+        if (!qid.equals("0")) quizService.attemptQuiz(student.getUserId(), qid, scanner);
+    }
+
+
 
 
 }
