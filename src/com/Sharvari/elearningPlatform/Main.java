@@ -241,7 +241,12 @@ public class Main {
         }
     }
 
-
+    private static void doChangePassword(User user) {
+        System.out.println("\n  ── Change Password ───────────────────");
+        System.out.print("  Old Password: "); String oldP = scanner.nextLine().trim();
+        System.out.print("  New Password: "); String newP = scanner.nextLine().trim();
+        userService.changePassword(user.getUserId(), oldP, newP);
+    }
 
 
 
