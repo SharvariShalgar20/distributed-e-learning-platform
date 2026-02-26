@@ -116,7 +116,41 @@ public class Main {
                 case "6": quizService.displayStudentScores(student.getUserId()); break;
                 case "7": doSearchCourses();              break;
                 case "8": doChangePassword(student);      break;
-                //case "0": logout();                       break;
+                case "0": logout();                       break;
+                default:  System.out.println("  ⚠ Invalid option.");
+            }
+        } catch (Exception e) { System.out.println("  ✘ Error: " + e.getMessage()); }
+    }
+
+    private static void showInstructorMenu(Instructor instructor) {
+        instructor.displayDashboard();
+        System.out.println("  ┌─── INSTRUCTOR MENU ──────────────┐");
+        System.out.println("  │  1. Create New Course            │");
+        System.out.println("  │  2. My Courses                   │");
+        System.out.println("  │  3. Publish / Unpublish Course   │");
+        System.out.println("  │  4. Edit Course                  │");
+        System.out.println("  │  5. Delete Course                │");
+        System.out.println("  │  6. Create Quiz for Course       │");
+        System.out.println("  │  7. Add Question to Quiz         │");
+        System.out.println("  │  8. View Course Enrollments      │");
+        System.out.println("  │  9. Delete Quiz                  │");
+        System.out.println("  │  A. Change Password              │");
+        System.out.println("  │  0. Logout                       │");
+        System.out.println("  └──────────────────────────────────┘");
+        System.out.print("  Choose: ");
+        try {
+            switch (scanner.nextLine().trim().toUpperCase()) {
+                //case "1": doCreateCourse(instructor);    break;
+                //case "2": doViewMyCourses(instructor);   break;
+                //case "3": doPublishUnpublish(instructor);break;
+                //case "4": doEditCourse(instructor);      break;
+                //case "5": doDeleteCourse(instructor);    break;
+                //case "6": doCreateQuiz(instructor);      break;
+                //case "7": doAddQuestion(instructor);     break;
+                //case "8": doViewEnrollments(instructor); break;
+                //case "9": doDeleteQuiz(instructor);      break;
+                //case "A": doChangePassword(instructor);  break;
+                case "0": logout();                      break;
                 default:  System.out.println("  ⚠ Invalid option.");
             }
         } catch (Exception e) { System.out.println("  ✘ Error: " + e.getMessage()); }
@@ -246,6 +280,12 @@ public class Main {
         System.out.print("  Old Password: "); String oldP = scanner.nextLine().trim();
         System.out.print("  New Password: "); String newP = scanner.nextLine().trim();
         userService.changePassword(user.getUserId(), oldP, newP);
+    }
+
+
+    private static void logout() {
+        System.out.println("  ✔ Logged out. Goodbye, " + currentUser.getName() + "!");
+        currentUser = null;
     }
 
 
