@@ -140,7 +140,7 @@ public class Main {
         System.out.print("  Choose: ");
         try {
             switch (scanner.nextLine().trim().toUpperCase()) {
-                //case "1": doCreateCourse(instructor);    break;
+                case "1": doCreateCourse(instructor);    break;
                 //case "2": doViewMyCourses(instructor);   break;
                 //case "3": doPublishUnpublish(instructor);break;
                 //case "4": doEditCourse(instructor);      break;
@@ -155,6 +155,8 @@ public class Main {
             }
         } catch (Exception e) { System.out.println("  ✘ Error: " + e.getMessage()); }
     }
+
+    // ── Main Menu Actions ────────────────────────────
 
     private static void doLogin() {
         System.out.println("\n  ── Login ─────────────────────────────");
@@ -201,6 +203,8 @@ public class Main {
             System.out.println("  ──────────────────────────────────────");
         }
     }
+
+    // ── Student Actions ────────────────────────────
 
     private static void doBrowseAndEnroll(Student student) {
         printCourseList("  ── Available Courses ─────────────────", courseService.getPublishedCourses());
@@ -286,6 +290,19 @@ public class Main {
     private static void logout() {
         System.out.println("  ✔ Logged out. Goodbye, " + currentUser.getName() + "!");
         currentUser = null;
+    }
+
+    // ── Instructor Actions ────────────────────────────
+    private static void doCreateCourse(Instructor instructor) {
+        System.out.println("\n  ── Create New Course ─────────────────");
+        System.out.print("  Title       : "); String title = scanner.nextLine().trim();
+        System.out.print("  Description : "); String desc  = scanner.nextLine().trim();
+        System.out.print("  Category    : "); String cat   = scanner.nextLine().trim();
+        System.out.print("  Duration (h): ");
+        try {
+            int hours = Integer.parseInt(scanner.nextLine().trim());
+            courseService.createCourse(instructor.getUserId(), title, desc, cat, hours);
+        } catch (NumberFormatException e) { System.out.println("  ✘ Invalid duration."); }
     }
 
 
