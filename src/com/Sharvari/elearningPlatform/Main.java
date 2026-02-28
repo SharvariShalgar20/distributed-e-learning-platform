@@ -143,7 +143,7 @@ public class Main {
                 case "1": doCreateCourse(instructor);    break;
                 case "2": doViewMyCourses(instructor);   break;
                 case "3": doPublishUnpublish(instructor);break;
-                //case "4": doEditCourse(instructor);      break;
+                case "4": doEditCourse(instructor);      break;
                 //case "5": doDeleteCourse(instructor);    break;
                 //case "6": doCreateQuiz(instructor);      break;
                 //case "7": doAddQuestion(instructor);     break;
@@ -344,6 +344,26 @@ public class Main {
         }else{
             courseService.publishCourse(instructor.getUserId(), cid);
         }
+    }
+
+    private static void doEditCourse(Instructor instructor){
+
+        printCourseList("  ── My Courses ────────────────────────",
+                courseService.getCoursesByInstructor(instructor.getUserId()));
+
+        System.out.print(" Enter Course ID to edit (or Enter to go back): ");
+        String cid = scanner.nextLine().trim();
+
+        if(cid.isEmpty()) return;
+
+        System.out.println("  (Leave blank to keep current value)");
+        System.out.print("  New Title      : "); String title = scanner.nextLine().trim();
+        System.out.print("  New Description: "); String desc  = scanner.nextLine().trim();
+        System.out.print("  New Category   : "); String cat   = scanner.nextLine().trim();
+        System.out.print("  New Duration   : "); String durStr = scanner.nextLine().trim();
+
+        int dur = durStr.isEmpty() ? 0 : Integer.parseInt(durStr);
+        courseService.updateCourse(instructor.getUserId(), cid, title, desc, cat, dur);
     }
 
 
