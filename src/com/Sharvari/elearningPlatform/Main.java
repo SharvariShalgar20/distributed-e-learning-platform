@@ -142,7 +142,7 @@ public class Main {
             switch (scanner.nextLine().trim().toUpperCase()) {
                 case "1": doCreateCourse(instructor);    break;
                 case "2": doViewMyCourses(instructor);   break;
-                //case "3": doPublishUnpublish(instructor);break;
+                case "3": doPublishUnpublish(instructor);break;
                 //case "4": doEditCourse(instructor);      break;
                 //case "5": doDeleteCourse(instructor);    break;
                 //case "6": doCreateQuiz(instructor);      break;
@@ -324,6 +324,25 @@ public class Main {
                     quizzes.forEach(q -> System.out.println(" " + q));
                 }
             }
+        }
+    }
+
+    private static void doPublishUnpublish(Instructor instructor){
+
+        List<Course> courses = courseService.getCoursesByInstructor(instructor.getUserId());
+        printCourseList("  ── My Courses ────────────────────────", courses);
+
+        System.out.print(" Enter Course ID (or Enter to go back): ");
+        String cid = scanner.nextLine().trim();
+
+        if(cid.isEmpty()) return;
+
+        Course c = courseService.findById(cid);
+
+        if(c.isPublished()){
+            courseService.unpublishCourse(instructor.getUserId(), cid);
+        }else{
+            courseService.publishCourse(instructor.getUserId(), cid);
         }
     }
 
