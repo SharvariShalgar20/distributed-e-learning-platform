@@ -141,7 +141,7 @@ public class Main {
         try {
             switch (scanner.nextLine().trim().toUpperCase()) {
                 case "1": doCreateCourse(instructor);    break;
-                //case "2": doViewMyCourses(instructor);   break;
+                case "2": doViewMyCourses(instructor);   break;
                 //case "3": doPublishUnpublish(instructor);break;
                 //case "4": doEditCourse(instructor);      break;
                 //case "5": doDeleteCourse(instructor);    break;
@@ -305,7 +305,27 @@ public class Main {
         } catch (NumberFormatException e) { System.out.println("  ✘ Invalid duration."); }
     }
 
+    private static void doViewMyCourses(Instructor instructor){
 
+        List<Course> courses = courseService.getCoursesByInstructor(instructor.getUserId());
+        printCourseList("  ── My Courses ────────────────────────", courses);
+
+        if(!courses.isEmpty()){
+            System.out.print("Enter Course ID to see its quizzes (or enter to skip) : ");
+            String cid = scanner.nextLine().trim();
+
+            if(!cid.isEmpty()){
+                List<Quiz> quizzes = quizService.getQuizzesByCourse(cid);
+                System.out.println("  ── Quizzes ───────────────────────────");
+
+                if(quizzes.isEmpty()){
+                    System.out.println(" No quizzes yet! ");
+                }else{
+                    quizzes.forEach(q -> System.out.println(" " + q));
+                }
+            }
+        }
+    }
 
 
 
