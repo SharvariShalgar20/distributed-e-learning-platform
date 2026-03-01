@@ -144,7 +144,7 @@ public class Main {
                 case "2": doViewMyCourses(instructor);   break;
                 case "3": doPublishUnpublish(instructor);break;
                 case "4": doEditCourse(instructor);      break;
-                //case "5": doDeleteCourse(instructor);    break;
+                case "5": doDeleteCourse(instructor);    break;
                 //case "6": doCreateQuiz(instructor);      break;
                 //case "7": doAddQuestion(instructor);     break;
                 //case "8": doViewEnrollments(instructor); break;
@@ -365,6 +365,24 @@ public class Main {
         int dur = durStr.isEmpty() ? 0 : Integer.parseInt(durStr);
         courseService.updateCourse(instructor.getUserId(), cid, title, desc, cat, dur);
     }
+
+
+    private static void doDeleteCourse(Instructor instructor){
+
+        printCourseList("  ── My Courses ────────────────────────",
+                courseService.getCoursesByInstructor(instructor.getUserId()));
+
+        System.out.print(" Enter Course ID to edit (or Enter to go back): ");
+        String cid = scanner.nextLine().trim();
+
+        if(cid.isEmpty()) return;
+
+        System.out.println(" Are you sure? (Yes/NO) : ");
+        if(scanner.nextLine().trim().equalsIgnoreCase("yes")){
+            courseService.deleteCourse(instructor.getUserId(), cid);
+        }
+    }
+
 
 
 
