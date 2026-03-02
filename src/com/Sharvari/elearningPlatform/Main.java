@@ -145,7 +145,7 @@ public class Main {
                 case "3": doPublishUnpublish(instructor);break;
                 case "4": doEditCourse(instructor);      break;
                 case "5": doDeleteCourse(instructor);    break;
-                //case "6": doCreateQuiz(instructor);      break;
+                case "6": doCreateQuiz(instructor);      break;
                 //case "7": doAddQuestion(instructor);     break;
                 //case "8": doViewEnrollments(instructor); break;
                 //case "9": doDeleteQuiz(instructor);      break;
@@ -380,6 +380,30 @@ public class Main {
         System.out.println(" Are you sure? (Yes/NO) : ");
         if(scanner.nextLine().trim().equalsIgnoreCase("yes")){
             courseService.deleteCourse(instructor.getUserId(), cid);
+        }
+    }
+
+    private static void doCreateQuiz(Instructor instructor){
+
+        printCourseList("  ── My Courses ────────────────────────",
+                courseService.getCoursesByInstructor(instructor.getUserId()));
+
+        System.out.print(" Enter Course ID to edit (or Enter to go back): ");
+        String cid = scanner.nextLine().trim();
+
+        if(cid.isEmpty()) return;
+
+        System.out.print("  Quiz Title        : ");
+        String title = scanner.nextLine().trim();
+        System.out.print("  Time Limit (min)  : ");
+
+        try{
+            int time = Integer.parseInt(scanner.nextLine().trim());
+            System.out.print(" Passing score % : ");
+            double pass = Double.parseDouble(scanner.nextLine().trim());
+            quizService.createQuiz(instructor.getUserId(), cid, title, time, pass);
+        }catch(NumberFormatException e){
+            System.out.println("  ✘ Invalid number.");
         }
     }
 
