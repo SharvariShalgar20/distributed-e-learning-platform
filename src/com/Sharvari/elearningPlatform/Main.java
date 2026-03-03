@@ -450,7 +450,30 @@ public class Main {
         printCourseList("  ── My Courses ────────────────────────",
                 courseService.getCoursesByInstructor(instructor.getUserId()));
 
+        System.out.print("  Enter Course ID: ");
+        String cid = scanner.nextLine().trim();
+        if (cid.isEmpty()) return;
 
+        List<Enrollment> list = enrollmentService.getEnrollmentsByCourse(cid);
+
+        System.out.println("\n  ── Enrollments ───────────────────────");
+
+        if(list.isEmpty()){
+            System.out.println("  No students enrolled.");
+            return;
+        }
+
+        for(Enrollment e : list){
+            String name;
+            try{
+                name = userService.findById(e.getStudentId()).getName();
+            } catch(Exception ex) {
+                name = e.getStudentId();
+            }
+
+            System.out.printf("  %-20s | Progress: %5.1f%% | Status: %s%n",
+                    name, e.getProgress(), e.getStatus());
+        }
     }
 
 
