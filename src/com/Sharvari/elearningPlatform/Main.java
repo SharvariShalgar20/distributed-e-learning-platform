@@ -146,7 +146,7 @@ public class Main {
                 case "4": doEditCourse(instructor);      break;
                 case "5": doDeleteCourse(instructor);    break;
                 case "6": doCreateQuiz(instructor);      break;
-                //case "7": doAddQuestion(instructor);     break;
+                case "7": doAddQuestion(instructor);     break;
                 //case "8": doViewEnrollments(instructor); break;
                 //case "9": doDeleteQuiz(instructor);      break;
                 //case "A": doChangePassword(instructor);  break;
@@ -408,6 +408,42 @@ public class Main {
     }
 
 
+    private static void doAddQuestion(Instructor instructor){
+
+        System.out.println("\n  ── Add Question to Quiz ──────────────");
+        printCourseList("  ── My Courses ────────────────────────",
+                courseService.getCoursesByInstructor(instructor.getUserId()));
+        System.out.print("  Enter Quiz ID: ");
+        String quizId = scanner.nextLine().trim();
+        if (quizId.isEmpty()) return;
+
+        System.out.print(" Question text : ");
+        String text = scanner.nextLine().trim();
+
+        System.out.println(" Enter 4 Options : ");
+
+        String[] options = new String[4];
+
+        String[] label = {"A" , "B", "C", "D"};
+
+        for(int i=0 ; i<4 ; i++){
+            System.out.print(" " + label[i] + " : ");
+            options[i] = scanner.nextLine().trim();
+            System.out.println();
+        }
+
+        System.out.print("Correct answer (A/ B/ C/ D) : ");
+        char correct = scanner.nextLine().trim().toUpperCase().charAt(0);
+
+        System.out.print(" Marks : ");
+
+        try{
+            int marks = Integer.parseInt(scanner.nextLine().trim());
+            quizService.addQuestion(instructor.getUserId(), quizId, text,options, correct, marks);
+        } catch(NumberFormatException e) {
+            System.out.println("  ✘ Invalid marks.");
+        }
+    }
 
 
 }
