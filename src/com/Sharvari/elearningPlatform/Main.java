@@ -147,7 +147,7 @@ public class Main {
                 case "5": doDeleteCourse(instructor);    break;
                 case "6": doCreateQuiz(instructor);      break;
                 case "7": doAddQuestion(instructor);     break;
-                //case "8": doViewEnrollments(instructor); break;
+                case "8": doViewEnrollments(instructor); break;
                 //case "9": doDeleteQuiz(instructor);      break;
                 //case "A": doChangePassword(instructor);  break;
                 case "0": logout();                      break;
@@ -444,6 +444,16 @@ public class Main {
             System.out.println("  ✘ Invalid marks.");
         }
     }
+
+    private static void doViewEnrollments(Instructor instructor){
+
+        printCourseList("  ── My Courses ────────────────────────",
+                courseService.getCoursesByInstructor(instructor.getUserId()));
+
+
+    }
+
+
 
 
 }
