@@ -148,7 +148,7 @@ public class Main {
                 case "6": doCreateQuiz(instructor);      break;
                 case "7": doAddQuestion(instructor);     break;
                 case "8": doViewEnrollments(instructor); break;
-                //case "9": doDeleteQuiz(instructor);      break;
+                case "9": doDeleteQuiz(instructor);      break;
                 //case "A": doChangePassword(instructor);  break;
                 case "0": logout();                      break;
                 default:  System.out.println("  ⚠ Invalid option.");
@@ -473,6 +473,20 @@ public class Main {
 
             System.out.printf("  %-20s | Progress: %5.1f%% | Status: %s%n",
                     name, e.getProgress(), e.getStatus());
+        }
+    }
+
+    private static void doDeleteQuiz(Instructor instructor){
+        printCourseList("  ── My Courses ────────────────────────",
+                courseService.getCoursesByInstructor(instructor.getUserId()));
+
+        System.out.print("  Enter Quiz ID to delete: ");
+        String qid = scanner.nextLine().trim();
+        if (qid.isEmpty()) return;
+
+        System.out.print("  Are you sure? (yes/no): ");
+        if (scanner.nextLine().trim().equalsIgnoreCase("yes")){
+            quizService.deleteQuiz(instructor.getUserId(), qid);
         }
     }
 
