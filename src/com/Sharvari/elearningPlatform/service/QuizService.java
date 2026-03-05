@@ -151,7 +151,7 @@ public class QuizService {
         System.out.println("  ✔ Quiz deleted: " + quizId);
     }
 
-    public void loadDemoData(String drSarahId, String courseId1, String courseId2) {
+    public void loadDemoData(String drSarahId, String profMarkId, String courseId1, String courseId2) {
         Quiz q1 = createQuiz(drSarahId, courseId1, "Java Basics Quiz", 30, 60.0);
         addQuestion(drSarahId, q1.getQuizId(), "Which keyword defines a class in Java?",
                 new String[]{"define", "class", "struct", "object"}, 'B', 5);
@@ -162,10 +162,10 @@ public class QuizService {
         addQuestion(drSarahId, q1.getQuizId(), "Entry point method of a Java program?",
                 new String[]{"start()", "run()", "main()", "init()"}, 'C', 5);
 
-        Quiz q2 = createQuiz(drSarahId, courseId2, "DSA Fundamentals Quiz", 20, 70.0);
-        addQuestion(drSarahId, q2.getQuizId(), "Time complexity of binary search?",
+        Quiz q2 = createQuiz(profMarkId, courseId2, "DSA Fundamentals Quiz", 20, 70.0);  // ← profMarkId
+        addQuestion(profMarkId, q2.getQuizId(), "Time complexity of binary search?",      // ← profMarkId
                 new String[]{"O(n)", "O(log n)", "O(n²)", "O(1)"}, 'B', 10);
-        addQuestion(drSarahId, q2.getQuizId(), "Which data structure uses LIFO?",
+        addQuestion(profMarkId, q2.getQuizId(), "Which data structure uses LIFO?",        // ← profMarkId
                 new String[]{"Queue", "Stack", "LinkedList", "Tree"}, 'B', 10);
     }
 
