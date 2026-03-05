@@ -23,17 +23,17 @@ public class Main {
         printBanner();
 
         boolean running = true;
-//        while (running) {
-//            if (currentUser == null) {
-//                running = showMainMenu();
-//            }
-//            else if (currentUser instanceof Student){
-//                showStudentMenu((Student) currentUser);
-//            }
-//            else if (currentUser instanceof Instructor) {
-//                showInstructorMenu((Instructor) currentUser);
-//            }
-//        }
+        while (running) {
+            if (currentUser == null) {
+                running = showMainMenu();
+            }
+            else if (currentUser instanceof Student){
+                showStudentMenu((Student) currentUser);
+            }
+            else if (currentUser instanceof Instructor) {
+                showInstructorMenu((Instructor) currentUser);
+            }
+        }
         System.out.println("\n  Thank you for using E-Learning Platform. Goodbye!\n");
         scanner.close();
     }
@@ -53,7 +53,7 @@ public class Main {
         String profMarkId = instructors.get(1).getUserId();
         courseService.loadDemoData(drSarahId, profMarkId);
         List<Course> courses = courseService.getPublishedCourses();
-        quizService.loadDemoData(drSarahId, courses.get(0).getCourseId(), courses.get(1).getCourseId());
+        quizService.loadDemoData(drSarahId, profMarkId, courses.get(0).getCourseId(), courses.get(1).getCourseId());
         System.out.println("  ──────────────────────────────────────────");
         System.out.println("  Demo Logins:");
         System.out.println("   Student    → alice@email.com / alice123");
@@ -149,7 +149,7 @@ public class Main {
                 case "7": doAddQuestion(instructor);     break;
                 case "8": doViewEnrollments(instructor); break;
                 case "9": doDeleteQuiz(instructor);      break;
-                //case "A": doChangePassword(instructor);  break;
+                case "A": doChangePassword(instructor);  break;
                 case "0": logout();                      break;
                 default:  System.out.println("  ⚠ Invalid option.");
             }
@@ -489,6 +489,8 @@ public class Main {
             quizService.deleteQuiz(instructor.getUserId(), qid);
         }
     }
+
+
 
 
 
