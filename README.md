@@ -45,12 +45,6 @@ com.sharvari.elearningplatform
 │   ├── EnrollmentService.java ← Interface: enroll/drop, progress tracking contract
 │   └── QuizService.java       ← Interface: quiz creation, question mgmt contract
 │
-├── service.impl
-│   ├── UserServiceImpl.java       ← In-memory implementation of UserService
-│   ├── CourseServiceImpl.java     ← In-memory implementation of CourseService
-│   ├── EnrollmentServiceImpl.java ← In-memory implementation of EnrollmentService
-│   └── QuizServiceImpl.java       ← In-memory implementation of QuizService
-│
 ├── repository
 │   ├── UserRepository.java        ← Interface: reserved for JDBC layer
 │   ├── CourseRepository.java      ← Interface: reserved for JDBC layer
