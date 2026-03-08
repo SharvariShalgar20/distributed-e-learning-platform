@@ -137,17 +137,6 @@ java -cp out com.sharvari.elearningplatform.main.Main
 
 ---
 
-## 🔐 Demo Login Credentials (Pre-loaded)
-
-| Role | Email | Password |
-|------|-------|----------|
-| Student | alice@email.com | alice123 |
-| Student | bob@email.com | bob123 |
-| Instructor | sarah@email.com | sarah123 |
-| Instructor | mark@email.com | mark123 |
-
----
-
 ## 🧪 Sample Walkthrough
 
 ```
