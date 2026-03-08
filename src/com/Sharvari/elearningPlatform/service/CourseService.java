@@ -111,22 +111,4 @@ public class CourseService {
         return list;
     }
 
-    public void loadDemoData(String drSarahId, String profMarkId) {
-        Course c1 = createCourse(drSarahId, "Java Programming Fundamentals",
-                "Learn Java from scratch with OOP principles.", "Programming", 20);
-        publishCourse(drSarahId, c1.getCourseId());
-
-        Course c2 = createCourse(drSarahId, "Data Structures & Algorithms",
-                "Master DSA for coding interviews.", "Programming", 30);
-        publishCourse(drSarahId, c2.getCourseId());
-
-        Course c3 = createCourse(profMarkId, "Python for Data Science",
-                "Hands-on data science with Python and pandas.", "Data Science", 25);
-        publishCourse(profMarkId, c3.getCourseId());
-
-        Course c4 = createCourse(profMarkId, "Machine Learning Basics",
-                "Introduction to ML algorithms and concepts.", "Data Science", 35);
-        publishCourse(profMarkId, c4.getCourseId());
-    }
-
 }

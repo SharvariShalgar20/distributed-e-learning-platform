@@ -102,13 +102,5 @@ public class UserService {
         System.out.println("  ✔ User deleted: " + userId);
     }
 
-    public void loadDemoData() {
-        registerStudent("Alice Johnson",  "alice@email.com", "alice123");
-        registerStudent("Bob Smith",      "bob@email.com",   "bob123");
-        registerInstructor("Dr. Sarah Lee",   "sarah@email.com", "sarah123", "Computer Science");
-        registerInstructor("Prof. Mark Roy",  "mark@email.com",  "mark123",  "Data Science");
-    }
-
-
 
 }
