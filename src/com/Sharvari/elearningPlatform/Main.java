@@ -414,8 +414,14 @@ public class Main {
             System.out.println();
         }
 
-        System.out.print("Correct answer (A/ B/ C/ D) : ");
-        char correct = scanner.nextLine().trim().toUpperCase().charAt(0);
+        char correct = ' ';
+        while (!"ABCD".contains(String.valueOf(correct))) {
+            System.out.print("  Correct answer (A/B/C/D): ");
+            String input = scanner.nextLine().trim().toUpperCase();
+            if (!input.isEmpty()) correct = input.charAt(0);
+            if (!"ABCD".contains(String.valueOf(correct)))
+                System.out.println("  ⚠ Invalid. Please enter A, B, C, or D.");
+        }
 
         System.out.print(" Marks : ");
 
