@@ -67,3 +67,24 @@ CREATE TABLE IF NOT EXISTS enrollments (
     CONSTRAINT uq_active_enrollment
     UNIQUE (student_id, course_id)
     );
+
+-- ── 4. QUIZZES ───────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS quizzes (
+                                       quiz_id             VARCHAR(20)     NOT NULL,
+    title               VARCHAR(200)    NOT NULL,
+    course_id           VARCHAR(20)     NOT NULL,
+    time_limit_minutes  INT             NOT NULL DEFAULT 30,
+    passing_score       DECIMAL(5,2)    NOT NULL DEFAULT 50.00
+    CHECK (passing_score >= 0 AND passing_score <= 100),
+    created_at          TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT pk_quizzes       PRIMARY KEY (quiz_id),
+    CONSTRAINT fk_quiz_course
+    FOREIGN KEY (course_id)
+    REFERENCES courses (course_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+    );
+
+
