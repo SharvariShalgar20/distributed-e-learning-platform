@@ -7,7 +7,7 @@ USE elearning_platform;
 
 -- ── 1. USERS ─────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS users (
-                                     user_id          VARCHAR(20)     NOT NULL,
+    user_id          VARCHAR(20)     NOT NULL,
     name             VARCHAR(100)    NOT NULL,
     email            VARCHAR(150)    NOT NULL,
     password         VARCHAR(255)    NOT NULL,      -- store hashed in production
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- ── 2. COURSES ───────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS courses (
-                                       course_id       VARCHAR(20)     NOT NULL,
+    course_id       VARCHAR(20)     NOT NULL,
     title           VARCHAR(200)    NOT NULL,
     description     TEXT            NOT NULL,
     instructor_id   VARCHAR(20)     NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS courses (
 
 -- ── 3. ENROLLMENTS ───────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS enrollments (
-                                           enrollment_id   VARCHAR(20)     NOT NULL,
+    enrollment_id   VARCHAR(20)     NOT NULL,
     student_id      VARCHAR(20)     NOT NULL,
     course_id       VARCHAR(20)     NOT NULL,
     enrollment_date DATE            NOT NULL,
@@ -67,3 +67,70 @@ CREATE TABLE IF NOT EXISTS enrollments (
     CONSTRAINT uq_active_enrollment
     UNIQUE (student_id, course_id)
     );
+
+-- ── 4. QUIZZES ───────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS quizzes (
+    quiz_id             VARCHAR(20)     NOT NULL,
+    title               VARCHAR(200)    NOT NULL,
+    course_id           VARCHAR(20)     NOT NULL,
+    time_limit_minutes  INT             NOT NULL DEFAULT 30,
+    passing_score       DECIMAL(5,2)    NOT NULL DEFAULT 50.00
+    CHECK (passing_score >= 0 AND passing_score <= 100),
+    created_at          TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT pk_quizzes  PRIMARY KEY (quiz_id),
+    CONSTRAINT fk_quiz_course
+    FOREIGN KEY (course_id)
+    REFERENCES courses (course_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+    );
+
+
+-- ── 5. QUESTIONS ─────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS questions (
+    question_id     VARCHAR(20)     NOT NULL,
+    quiz_id         VARCHAR(20)     NOT NULL,
+    question_text   TEXT            NOT NULL,
+    option_a        VARCHAR(500)    NOT NULL,
+    option_b        VARCHAR(500)    NOT NULL,
+    option_c        VARCHAR(500)    NOT NULL,
+    option_d        VARCHAR(500)    NOT NULL,
+    correct_answer  CHAR(1)         NOT NULL CHECK (correct_answer IN ('A','B','C','D')),
+    marks           INT             NOT NULL CHECK (marks > 0),
+
+    CONSTRAINT pk_questions     PRIMARY KEY (question_id),
+    CONSTRAINT fk_question_quiz
+    FOREIGN KEY (quiz_id)
+    REFERENCES quizzes (quiz_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+    );
+
+
+-- ── 6. QUIZ SCORES ───────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS quiz_scores (
+    student_id      VARCHAR(20)     NOT NULL,
+    quiz_id         VARCHAR(20)     NOT NULL,
+    score_percent   DECIMAL(5,2)    NOT NULL
+    CHECK (score_percent >= 0 AND score_percent <= 100),
+    attempted_at    TIMESTAMP       DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT pk_quiz_scores   PRIMARY KEY (student_id, quiz_id),
+    CONSTRAINT fk_score_student
+    FOREIGN KEY (student_id)
+    REFERENCES users (user_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+    CONSTRAINT fk_score_quiz
+    FOREIGN KEY (quiz_id)
+    REFERENCES quizzes (quiz_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+    );
+
+
