@@ -110,3 +110,27 @@ CREATE TABLE IF NOT EXISTS questions (
     );
 
 
+-- ── 6. QUIZ SCORES ───────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS quiz_scores (
+    student_id      VARCHAR(20)     NOT NULL,
+    quiz_id         VARCHAR(20)     NOT NULL,
+    score_percent   DECIMAL(5,2)    NOT NULL
+    CHECK (score_percent >= 0 AND score_percent <= 100),
+    attempted_at    TIMESTAMP       DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT pk_quiz_scores   PRIMARY KEY (student_id, quiz_id),
+    CONSTRAINT fk_score_student
+    FOREIGN KEY (student_id)
+    REFERENCES users (user_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+    CONSTRAINT fk_score_quiz
+    FOREIGN KEY (quiz_id)
+    REFERENCES quizzes (quiz_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+    );
+
+
