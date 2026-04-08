@@ -133,4 +133,13 @@ CREATE TABLE IF NOT EXISTS quiz_scores (
     ON UPDATE CASCADE
     );
 
+--  INDEXES
 
+CREATE INDEX idx_courses_instructor  ON courses     (instructor_id);
+CREATE INDEX idx_courses_published   ON courses     (is_published);
+CREATE INDEX idx_courses_category    ON courses     (category);
+CREATE INDEX idx_enrollments_student ON enrollments (student_id);
+CREATE INDEX idx_enrollments_course  ON enrollments (course_id);
+CREATE INDEX idx_quizzes_course      ON quizzes     (course_id);
+CREATE INDEX idx_questions_quiz      ON questions   (quiz_id);
+CREATE INDEX idx_scores_student      ON quiz_scores (student_id);
