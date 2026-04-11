@@ -101,6 +101,19 @@ public class UserRepositoryImpl implements UserRepository {
         return Optional.empty();
     }
 
+    @Override
+    public List<User> findAll() {
+        List<User> list = new ArrayList<>();
+        String sql = "SELECT * FROM users";
+        try (Statement st = conn().createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) list.add(mapRow(rs));
+        } catch (SQLException e) {
+            throw new RuntimeException("findAll(User) failed: " + e.getMessage(), e);
+        }
+        return list;
+    }
+
 
 
 }
