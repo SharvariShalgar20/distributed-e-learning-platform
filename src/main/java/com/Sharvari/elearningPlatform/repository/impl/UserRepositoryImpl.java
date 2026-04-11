@@ -87,5 +87,20 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
 
+    @Override
+    public Optional<User> findByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, email.toLowerCase());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return Optional.of(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("findByEmail failed: " + e.getMessage(), e);
+        }
+        return Optional.empty();
+    }
+
+
 
 }
