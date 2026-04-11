@@ -144,6 +144,15 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
-
+    @Override
+    public void delete(String userId) {
+        String sql = "DELETE FROM users WHERE user_id = ?";
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("delete(User) failed: " + e.getMessage(), e);
+        }
+    }
 
 }
