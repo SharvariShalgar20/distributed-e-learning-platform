@@ -114,6 +114,36 @@ public class UserRepositoryImpl implements UserRepository {
         return list;
     }
 
+    @Override
+    public void update(User user) {
+        String sql = """
+                UPDATE users
+                   SET name = ?, email = ?, password = ?,
+                       expertise = ?, overall_progress = ?
+                 WHERE user_id = ?
+                """;
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
+
+            if (user instanceof Instructor) {
+                ps.setString(4, ((Instructor) user).getExpertise());
+            } else {
+                ps.setNull(4, Types.VARCHAR);
+            }
+
+            double progress = (user instanceof Student)
+                    ? ((Student) user).getOverallProgress() : 0.0;
+            ps.setDouble(5, progress);
+            ps.setString(6, user.getUserId());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("update(User) failed: " + e.getMessage(), e);
+        }
+    }
+
 
 
 }
