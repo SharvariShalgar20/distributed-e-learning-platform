@@ -17,6 +17,29 @@ public class UserRepositoryImpl implements UserRepository {
         return DBConnection.getConnection();
     }
 
+    private User mapRow(ResultSet rs) throws SQLException {
+        String userId   = rs.getString("user_id");
+        String name     = rs.getString("name");
+        String email    = rs.getString("email");
+        String password = rs.getString("password");
+        String role     = rs.getString("role");
+
+        if ("INSTRUCTOR".equals(role)) {
+            String expertise = rs.getString("expertise");
+            Instructor inst  = new Instructor(userId, name, email, password,
+                    expertise == null ? "" : expertise);
+            // Re-hydrate created course ids from the courses table on demand
+            // (loaded lazily via CourseService.getCoursesByInstructor)
+            return inst;
+        } else {
+            Student student = new Student(userId, name, email, password);
+            double overall  = rs.getDouble("overall_progress");
+            student.setOverallProgress(overall);
+            // Enrolled course ids are loaded lazily via EnrollmentService
+            return student;
+        }
+    }
+
     @Override
     public void save(User user) {
         String sql = """
@@ -46,6 +69,21 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (SQLException e) {
             throw new RuntimeException("save(User) failed: " + e.getMessage(), e);
         }
+    }
+
+
+    @Override
+    public Optional<User> findById(String userId) {
+        String sql = "SELECT * FROM users WHERE user_id = ?";
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return Optional.of(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("findById(User) failed: " + e.getMessage(), e);
+        }
+        return Optional.empty();
     }
 
 
