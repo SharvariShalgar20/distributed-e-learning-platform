@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CourseRepositoryImpl {
+public class CourseRepositoryImpl implements CourseRepository{
 
-    private Connection conn() implements CourseRepository{
+    private Connection conn() {
         return DBConnection.getConnection();
     }
 
@@ -88,6 +88,58 @@ public class CourseRepositoryImpl {
                 ps -> {}
         );
     }
+
+    @Override
+    public void update(Course course) {
+        String sql = """
+                UPDATE courses
+                   SET title = ?, description = ?, category = ?,
+                       duration_hours = ?, is_published = ?
+                 WHERE course_id = ?
+                """;
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString (1, course.getTitle());
+            ps.setString (2, course.getDescription());
+            ps.setString (3, course.getCategory());
+            ps.setInt    (4, course.getDurationHours());
+            ps.setBoolean(5, course.isPublished());
+            ps.setString (6, course.getCourseId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("update(Course) failed: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void delete(String courseId) {
+        String sql = "DELETE FROM courses WHERE course_id = ?";
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, courseId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("delete(Course) failed: " + e.getMessage(), e);
+        }
+    }
+
+    /** Finds published courses whose title contains the keyword (case-insensitive). */
+    public List<Course> findPublishedByTitleKeyword(String keyword) {
+        return queryList(
+                "SELECT * FROM courses WHERE is_published = 1 AND LOWER(title) LIKE ?",
+                ps -> ps.setString(1, "%" + keyword.toLowerCase() + "%")
+        );
+    }
+
+
+    /** Finds published courses matching the given category (case-insensitive). */
+    public List<Course> findPublishedByCategory(String category) {
+        return queryList(
+                "SELECT * FROM courses WHERE is_published = 1 AND LOWER(category) = ?",
+                ps -> ps.setString(1, category.toLowerCase())
+        );
+    }
+
+
+
 
     @FunctionalInterface
     private interface Setter {
