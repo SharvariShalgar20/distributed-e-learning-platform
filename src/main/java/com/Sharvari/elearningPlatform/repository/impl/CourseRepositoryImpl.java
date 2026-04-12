@@ -81,6 +81,14 @@ public class CourseRepositoryImpl {
         );
     }
 
+    @Override
+    public List<Course> findPublished() {
+        return queryList(
+                "SELECT * FROM courses WHERE is_published = 1",
+                ps -> {}
+        );
+    }
+
     @FunctionalInterface
     private interface Setter {
         void set(PreparedStatement ps) throws SQLException;
