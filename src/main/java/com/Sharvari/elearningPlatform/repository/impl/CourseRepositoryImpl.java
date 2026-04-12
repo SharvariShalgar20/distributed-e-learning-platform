@@ -15,6 +15,22 @@ public class CourseRepositoryImpl {
         return DBConnection.getConnection();
     }
 
+    private Course mapRow(ResultSet rs) throws SQLException {
+        Course course = new Course(
+                rs.getString("course_id"),
+                rs.getString("title"),
+                rs.getString("description"),
+                rs.getString("instructor_id"),
+                rs.getString("category"),
+                rs.getInt("duration_hours")
+        );
+        if (rs.getBoolean("is_published")) {
+            course.publish();
+        }
+        // quiz IDs and enrolled student IDs are managed by their own tables;
+        // they are re-populated by the service layer on startup if needed.
+        return course;
+    }
 
     @Override
     public void save(Course course) {
@@ -36,6 +52,20 @@ public class CourseRepositoryImpl {
         } catch (SQLException e) {
             throw new RuntimeException("save(Course) failed: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public Optional<Course> findById(String courseId) {
+        String sql = "SELECT * FROM courses WHERE course_id = ?";
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, courseId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return Optional.of(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("findById(Course) failed: " + e.getMessage(), e);
+        }
+        return Optional.empty();
     }
 
 
