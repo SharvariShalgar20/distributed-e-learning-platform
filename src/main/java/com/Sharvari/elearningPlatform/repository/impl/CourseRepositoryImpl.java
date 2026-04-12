@@ -73,6 +73,14 @@ public class CourseRepositoryImpl {
         return queryList("SELECT * FROM courses", ps -> {});
     }
 
+    @Override
+    public List<Course> findByInstructorId(String instructorId) {
+        return queryList(
+                "SELECT * FROM courses WHERE instructor_id = ?",
+                ps -> ps.setString(1, instructorId)
+        );
+    }
+
     @FunctionalInterface
     private interface Setter {
         void set(PreparedStatement ps) throws SQLException;
