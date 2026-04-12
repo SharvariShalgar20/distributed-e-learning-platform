@@ -68,6 +68,27 @@ public class CourseRepositoryImpl {
         return Optional.empty();
     }
 
+    @Override
+    public List<Course> findAll() {
+        return queryList("SELECT * FROM courses", ps -> {});
+    }
 
+    @FunctionalInterface
+    private interface Setter {
+        void set(PreparedStatement ps) throws SQLException;
+    }
+
+    private List<Course> queryList(String sql, Setter setter) {
+        List<Course> list = new ArrayList<>();
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            setter.set(ps);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("queryList(Course) failed: " + e.getMessage(), e);
+        }
+        return list;
+    }
 
 }
