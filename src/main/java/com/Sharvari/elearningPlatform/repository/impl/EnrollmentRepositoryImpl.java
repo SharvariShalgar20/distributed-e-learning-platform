@@ -16,6 +16,27 @@ public class EnrollmentRepositoryImpl implements EnrollmentRepository {
         return DBConnection.getConnection();
     }
 
+    private Enrollment mapRow(ResultSet rs) throws SQLException {
+        Enrollment e = new Enrollment(
+                rs.getString("enrollment_id"),
+                rs.getString("student_id"),
+                rs.getString("course_id")
+        );
+        // Override the default values set in the constructor with DB values
+        double progress = rs.getDouble("progress");
+        // updateProgress also adjusts status, so we use a small workaround:
+        // call the method only when progress differs from 0.
+        if (progress > 0) {
+            e.updateProgress(progress);
+        }
+        String status = rs.getString("status");
+        // If DB says DROPPED but progress didn't trigger it, force-drop
+        if ("DROPPED".equals(status) && !"DROPPED".equals(e.getStatus())) {
+            e.drop();
+        }
+        return e;
+    }
+
     @Override
     public void save(Enrollment enrollment) {
         String sql = """
@@ -37,5 +58,17 @@ public class EnrollmentRepositoryImpl implements EnrollmentRepository {
         }
     }
 
-
+    @Override
+    public Optional<Enrollment> findById(String enrollmentId) {
+        String sql = "SELECT * FROM enrollments WHERE enrollment_id = ?";
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, enrollmentId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return Optional.of(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("findById(Enrollment) failed: " + e.getMessage(), e);
+        }
+        return Optional.empty();
+    }
 }
