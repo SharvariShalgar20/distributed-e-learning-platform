@@ -71,4 +71,23 @@ public class EnrollmentRepositoryImpl implements EnrollmentRepository {
         }
         return Optional.empty();
     }
+
+    @Override
+    public Optional<Enrollment> findByStudentAndCourse(String studentId, String courseId) {
+        String sql = """
+                SELECT * FROM enrollments
+                 WHERE student_id = ? AND course_id = ? AND status != 'DROPPED'
+                 LIMIT 1
+                """;
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, studentId);
+            ps.setString(2, courseId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return Optional.of(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("findByStudentAndCourse failed: " + e.getMessage(), e);
+        }
+        return Optional.empty();
+    }
 }
