@@ -90,4 +90,21 @@ public class EnrollmentRepositoryImpl implements EnrollmentRepository {
         }
         return Optional.empty();
     }
+
+    @Override
+    public void update(Enrollment enrollment) {
+        String sql = """
+                UPDATE enrollments
+                   SET progress = ?, status = ?
+                 WHERE enrollment_id = ?
+                """;
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setDouble(1, enrollment.getProgress());
+            ps.setString(2, enrollment.getStatus());
+            ps.setString(3, enrollment.getEnrollmentId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("update(Enrollment) failed: " + e.getMessage(), e);
+        }
+    }
 }
