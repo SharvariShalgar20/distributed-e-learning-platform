@@ -107,4 +107,22 @@ public class EnrollmentRepositoryImpl implements EnrollmentRepository {
             throw new RuntimeException("update(Enrollment) failed: " + e.getMessage(), e);
         }
     }
+
+    @FunctionalInterface
+    private interface Setter {
+        void set(PreparedStatement ps) throws SQLException;
+    }
+
+    private List<Enrollment> queryList(String sql, Setter setter) {
+        List<Enrollment> list = new ArrayList<>();
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            setter.set(ps);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("queryList(Enrollment) failed: " + e.getMessage(), e);
+        }
+        return list;
+    }
 }
