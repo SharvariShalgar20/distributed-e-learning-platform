@@ -92,6 +92,22 @@ public class EnrollmentRepositoryImpl implements EnrollmentRepository {
     }
 
     @Override
+    public List<Enrollment> findByStudentId(String studentId) {
+        return queryList(
+                "SELECT * FROM enrollments WHERE student_id = ?",
+                ps -> ps.setString(1, studentId)
+        );
+    }
+
+    @Override
+    public List<Enrollment> findByCourseId(String courseId) {
+        return queryList(
+                "SELECT * FROM enrollments WHERE course_id = ?",
+                ps -> ps.setString(1, courseId)
+        );
+    }
+
+    @Override
     public void update(Enrollment enrollment) {
         String sql = """
                 UPDATE enrollments
