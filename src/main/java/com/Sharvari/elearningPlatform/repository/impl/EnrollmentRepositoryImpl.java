@@ -124,6 +124,17 @@ public class EnrollmentRepositoryImpl implements EnrollmentRepository {
         }
     }
 
+    @Override
+    public void delete(String enrollmentId) {
+        String sql = "DELETE FROM enrollments WHERE enrollment_id = ?";
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, enrollmentId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("delete(Enrollment) failed: " + e.getMessage(), e);
+        }
+    }
+
     @FunctionalInterface
     private interface Setter {
         void set(PreparedStatement ps) throws SQLException;
