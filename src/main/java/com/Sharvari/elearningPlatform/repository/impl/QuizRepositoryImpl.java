@@ -13,4 +13,25 @@ public class QuizRepositoryImpl implements QuizRepository {
     private Connection conn() {
         return DBConnection.getConnection();
     }
+
+    // ── CRUD: quizzes ────────────────────────────────────────────────────────
+
+    @Override
+    public void save(Quiz quiz) {
+        String sql = """
+                INSERT INTO quizzes
+                    (quiz_id, title, course_id, time_limit_minutes, passing_score)
+                VALUES (?, ?, ?, ?, ?)
+                """;
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, quiz.getQuizId());
+            ps.setString(2, quiz.getTitle());
+            ps.setString(3, quiz.getCourseId());
+            ps.setInt   (4, quiz.getTimeLimitMinutes());
+            ps.setDouble(5, quiz.getPassingScore());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("save(Quiz) failed: " + e.getMessage(), e);
+        }
+    }
 }
