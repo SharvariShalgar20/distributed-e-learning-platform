@@ -34,4 +34,24 @@ public class QuizRepositoryImpl implements QuizRepository {
             throw new RuntimeException("save(Quiz) failed: " + e.getMessage(), e);
         }
     }
+
+    @Override
+    public void update(Quiz quiz) {
+        String sql = """
+                UPDATE quizzes
+                   SET title = ?, time_limit_minutes = ?, passing_score = ?
+                 WHERE quiz_id = ?
+                """;
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, quiz.getTitle());
+            ps.setInt   (2, quiz.getTimeLimitMinutes());
+            ps.setDouble(3, quiz.getPassingScore());
+            ps.setString(4, quiz.getQuizId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("update(Quiz) failed: " + e.getMessage(), e);
+        }
+    }
+
+
 }
