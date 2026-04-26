@@ -53,5 +53,19 @@ public class QuizRepositoryImpl implements QuizRepository {
         }
     }
 
+    @Override
+    public void delete(String quizId) {
+        // Cascades to questions and quiz_scores via FK ON DELETE CASCADE
+        String sql = "DELETE FROM quizzes WHERE quiz_id = ?";
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, quizId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("delete(Quiz) failed: " + e.getMessage(), e);
+        }
+    }
+
+
+
 
 }
