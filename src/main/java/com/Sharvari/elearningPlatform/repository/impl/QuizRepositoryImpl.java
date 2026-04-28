@@ -65,7 +65,15 @@ public class QuizRepositoryImpl implements QuizRepository {
         }
     }
 
+    // ── Questions ────────────────────────────────────────────────────────────
 
-
-
+    public void deleteQuestion(String questionId) {
+        String sql = "DELETE FROM questions WHERE question_id = ?";
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, questionId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("deleteQuestion failed: " + e.getMessage(), e);
+        }
+    }
 }
