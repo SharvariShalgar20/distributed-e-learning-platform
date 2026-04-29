@@ -67,6 +67,31 @@ public class QuizRepositoryImpl implements QuizRepository {
 
     // ── Questions ────────────────────────────────────────────────────────────
 
+    public void saveQuestion(Question question, String quizId) {
+        String sql = """
+                INSERT INTO questions
+                    (question_id, quiz_id, question_text,
+                     option_a, option_b, option_c, option_d,
+                     correct_answer, marks)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """;
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, question.getQuestionId());
+            ps.setString(2, quizId);
+            ps.setString(3, question.getText());
+            String[] opts = question.getOptions();
+            ps.setString(4, opts[0]);
+            ps.setString(5, opts[1]);
+            ps.setString(6, opts[2]);
+            ps.setString(7, opts[3]);
+            ps.setString(8, String.valueOf(question.getCorrectAnswer()));
+            ps.setInt   (9, question.getMarks());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("saveQuestion failed: " + e.getMessage(), e);
+        }
+    }
+
     public void deleteQuestion(String questionId) {
         String sql = "DELETE FROM questions WHERE question_id = ?";
         try (PreparedStatement ps = conn().prepareStatement(sql)) {
