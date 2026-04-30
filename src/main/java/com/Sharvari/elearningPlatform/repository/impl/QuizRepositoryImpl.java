@@ -101,4 +101,34 @@ public class QuizRepositoryImpl implements QuizRepository {
             throw new RuntimeException("deleteQuestion failed: " + e.getMessage(), e);
         }
     }
+
+    private void loadQuestionsInto(Quiz quiz) {
+        String sql = "SELECT * FROM questions WHERE quiz_id = ?";
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, quiz.getQuizId());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String[] options = {
+                            rs.getString("option_a"),
+                            rs.getString("option_b"),
+                            rs.getString("option_c"),
+                            rs.getString("option_d")
+                    };
+                    char correct = rs.getString("correct_answer").charAt(0);
+                    Question q = new Question(
+                            rs.getString("question_id"),
+                            rs.getString("question_text"),
+                            options,
+                            correct,
+                            rs.getInt("marks")
+                    );
+                    quiz.addQuestion(q);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("loadQuestionsInto failed: " + e.getMessage(), e);
+        }
+    }
+
+
 }
