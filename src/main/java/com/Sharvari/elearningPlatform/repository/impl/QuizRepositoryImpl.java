@@ -14,6 +14,19 @@ public class QuizRepositoryImpl implements QuizRepository {
         return DBConnection.getConnection();
     }
 
+    private Quiz mapQuizRow(ResultSet rs) throws SQLException {
+        Quiz quiz = new Quiz(
+                rs.getString("quiz_id"),
+                rs.getString("title"),
+                rs.getString("course_id"),
+                rs.getInt("time_limit_minutes"),
+                rs.getDouble("passing_score")
+        );
+        // Eagerly load questions for this quiz
+        loadQuestionsInto(quiz);
+        return quiz;
+    }
+
     // ── CRUD: quizzes ────────────────────────────────────────────────────────
 
     @Override
