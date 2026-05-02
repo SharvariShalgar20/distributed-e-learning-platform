@@ -49,6 +49,20 @@ public class QuizRepositoryImpl implements QuizRepository {
     }
 
     @Override
+    public Optional<Quiz> findById(String quizId) {
+        String sql = "SELECT * FROM quizzes WHERE quiz_id = ?";
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, quizId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return Optional.of(mapQuizRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("findById(Quiz) failed: " + e.getMessage(), e);
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public void update(Quiz quiz) {
         String sql = """
                 UPDATE quizzes
