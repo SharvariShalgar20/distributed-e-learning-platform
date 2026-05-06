@@ -78,6 +78,19 @@ public class QuizRepositoryImpl implements QuizRepository {
     }
 
     @Override
+    public List<Quiz> findAll() {
+        List<Quiz> list = new ArrayList<>();
+        String sql = "SELECT * FROM quizzes";
+        try (Statement st = conn().createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) list.add(mapQuizRow(rs));
+        } catch (SQLException e) {
+            throw new RuntimeException("findAll(Quiz) failed: " + e.getMessage(), e);
+        }
+        return list;
+    }
+
+    @Override
     public void update(Quiz quiz) {
         String sql = """
                 UPDATE quizzes
