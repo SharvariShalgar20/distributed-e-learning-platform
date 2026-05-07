@@ -187,6 +187,11 @@ public class QuizRepositoryImpl implements QuizRepository {
 
     // ── Quiz Scores ──────────────────────────────────────────────────────────
 
+    /**
+     * Inserts or updates a quiz score (upsert).
+     * Uses MySQL's INSERT … ON DUPLICATE KEY UPDATE.
+     */
+
     public void saveOrUpdateScore(String studentId, String quizId, double scorePercent) {
         String sql = """
                 INSERT INTO quiz_scores (student_id, quiz_id, score_percent)
