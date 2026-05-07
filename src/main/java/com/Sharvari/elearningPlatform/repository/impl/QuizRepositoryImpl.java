@@ -185,5 +185,24 @@ public class QuizRepositoryImpl implements QuizRepository {
         }
     }
 
+    // ── Quiz Scores ──────────────────────────────────────────────────────────
+
+    public void saveOrUpdateScore(String studentId, String quizId, double scorePercent) {
+        String sql = """
+                INSERT INTO quiz_scores (student_id, quiz_id, score_percent)
+                VALUES (?, ?, ?)
+                ON DUPLICATE KEY UPDATE score_percent = VALUES(score_percent),
+                                         attempted_at  = CURRENT_TIMESTAMP
+                """;
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, studentId);
+            ps.setString(2, quizId);
+            ps.setDouble(3, scorePercent);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("saveOrUpdateScore failed: " + e.getMessage(), e);
+        }
+    }
+
 
 }
