@@ -209,5 +209,23 @@ public class QuizRepositoryImpl implements QuizRepository {
         }
     }
 
+    /**
+     * Returns all quiz scores for a given student as a Map of quizId → scorePercent.
+     */
+    public Map<String, Double> findScoresByStudent(String studentId) {
+        Map<String, Double> scores = new LinkedHashMap<>();
+        String sql = "SELECT quiz_id, score_percent FROM quiz_scores WHERE student_id = ?";
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, studentId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    scores.put(rs.getString("quiz_id"), rs.getDouble("score_percent"));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("findScoresByStudent failed: " + e.getMessage(), e);
+        }
+        return scores;
+    }
 
 }
