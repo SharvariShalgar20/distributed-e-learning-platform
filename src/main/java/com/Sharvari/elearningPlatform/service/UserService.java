@@ -39,8 +39,9 @@ public class UserService {
         if (!InputValidator.isNotBlank(expertise)) throw new IllegalArgumentException("Expertise cannot be blank.");
         String id = IdGenerator.generateUserId();
         Instructor instructor = new Instructor(id, name, email, password, expertise);
-        usersById.put(id, instructor);
-        usersByEmail.put(email.toLowerCase(), instructor);
+
+        userRepository.save(instructor);
+
         System.out.println("  ✔ Instructor registered! ID: " + id);
         return instructor;
     }
