@@ -58,11 +58,17 @@ public class UserService {
         if (!InputValidator.isValidPassword(password)) throw new IllegalArgumentException("Password must be at least 6 characters.");
     }
 
+    // ── Authentication ───────────────────────────────────────────────────────
+
     public User login(String email, String password) {
-        User user = usersByEmail.get(email.toLowerCase());
-        if (user == null || !user.getPassword().equals(password))
+        User user = userRepository.findByEmail(email.toLowerCase())
+                .orElseThrow(() -> new AuthenticationException("Invalid email or password."));
+
+        if (!user.getPassword().equals(password))
             throw new AuthenticationException("Invalid email or password.");
+
         System.out.println("  ✔ Login successful! Welcome, " + user.getName() + ".");
+
         return user;
     }
 
