@@ -81,7 +81,7 @@ public class UserService {
     }
 
     public Optional<User> findByEmail(String email) {
-        return Optional.ofNullable(usersByEmail.get(email.toLowerCase()));
+        return userRepository.findByEmail(email.toLowerCase());
     }
 
     public List<User> getAllUsers(){
