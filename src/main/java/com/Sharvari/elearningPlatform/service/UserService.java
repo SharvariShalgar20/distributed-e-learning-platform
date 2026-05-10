@@ -109,9 +109,16 @@ public class UserService {
         return list;
     }
 
+    // ── Mutations ────────────────────────────────────────────────────────────
+
     public void updateUserName(String userId, String newName) {
-        if (!InputValidator.isValidName(newName)) throw new IllegalArgumentException("Invalid name.");
-        findById(userId).setName(newName);
+        if (!InputValidator.isValidName(newName))
+            throw new IllegalArgumentException("Invalid name.");
+
+        User user = findById(userId);
+        user.setName(newName);
+        userRepository.update(user);
+
         System.out.println("  ✔ Name updated to: " + newName);
     }
 
