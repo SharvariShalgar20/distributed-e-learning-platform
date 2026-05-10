@@ -7,6 +7,7 @@ import com.Sharvari.elearningPlatform.model.Student;
 import com.Sharvari.elearningPlatform.model.User;
 import com.Sharvari.elearningPlatform.util.IdGenerator;
 import com.Sharvari.elearningPlatform.util.InputValidator;
+import com.Sharvari.elearningPlatform.repository.impl.UserRepositoryImpl;
 
 import java.util.*;
 
