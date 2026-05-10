@@ -124,11 +124,14 @@ public class UserService {
 
     public void changePassword(String userId, String oldPassword, String newPassword) {
         User user = findById(userId);
+
         if (!user.getPassword().equals(oldPassword))
             throw new AuthenticationException("Old password is incorrect.");
         if (!InputValidator.isValidPassword(newPassword))
             throw new IllegalArgumentException("Password must be at least 6 characters.");
+
         user.setPassword(newPassword);
+        userRepository.update(user);
         System.out.println("  ✔ Password changed successfully.");
     }
 
