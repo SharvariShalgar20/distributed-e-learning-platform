@@ -136,11 +136,10 @@ public class UserService {
     }
 
     public void deleteUser(String userId) {
-        User user = findById(userId);
-        usersById.remove(userId);
-        usersByEmail.remove(user.getEmail().toLowerCase());
+        findById(userId);                 // throws if not found
+        userRepository.delete(userId);
+
         System.out.println("  ✔ User deleted: " + userId);
     }
-
 
 }
