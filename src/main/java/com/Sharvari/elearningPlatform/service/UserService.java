@@ -13,10 +13,6 @@ import java.util.*;
 
 public class UserService {
 
-    private final Map<String, User> usersById    = new HashMap<>();
-    private final Map<String, User> usersByEmail = new HashMap<>();
-
-
     private final UserRepositoryImpl userRepository;
 
     public UserService(UserRepositoryImpl userRepository) {
