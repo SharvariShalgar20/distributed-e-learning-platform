@@ -1,6 +1,8 @@
 package com.Sharvari.elearningPlatform;
 
 import com.Sharvari.elearningPlatform.model.*;
+import com.Sharvari.elearningPlatform.repository.UserRepository;
+import com.Sharvari.elearningPlatform.repository.impl.UserRepositoryImpl;
 import com.Sharvari.elearningPlatform.service.*;
 
 import java.util.List;
@@ -38,7 +40,8 @@ public class Main {
     }
 
     private static void initServices() {
-        userService       = new UserService();
+        UserRepositoryImpl userRepository = new UserRepositoryImpl();
+        userService       = new UserService(userRepository);
         courseService     = new CourseService(userService);
         enrollmentService = new EnrollmentService(userService, courseService);
         quizService       = new QuizService(userService, courseService, enrollmentService);

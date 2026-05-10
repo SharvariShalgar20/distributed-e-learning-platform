@@ -16,12 +16,20 @@ public class UserService {
     private final Map<String, User> usersById    = new HashMap<>();
     private final Map<String, User> usersByEmail = new HashMap<>();
 
+
+    private final UserRepositoryImpl userRepository;
+
+    public UserService(UserRepositoryImpl userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public Student registerStudent(String name, String email, String password) {
         validateRegistrationInput(name, email, password);
         String id = IdGenerator.generateUserId();
         Student student = new Student(id, name, email, password);
-        usersById.put(id, student);
-        usersByEmail.put(email.toLowerCase(), student);
+
+        userRepository.save(student);
+
         System.out.println("  ✔ Student registered! ID: " + id);
         return student;
     }
