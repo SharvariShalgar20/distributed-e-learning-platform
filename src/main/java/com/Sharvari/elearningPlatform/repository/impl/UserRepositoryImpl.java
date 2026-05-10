@@ -26,11 +26,10 @@ public class UserRepositoryImpl implements UserRepository {
 
         if ("INSTRUCTOR".equals(role)) {
             String expertise = rs.getString("expertise");
-            Instructor inst  = new Instructor(userId, name, email, password,
-                    expertise == null ? "" : expertise);
             // Re-hydrate created course ids from the courses table on demand
             // (loaded lazily via CourseService.getCoursesByInstructor)
-            return inst;
+            return new Instructor(userId, name, email, password,
+                    expertise == null ? "" : expertise);
         } else {
             Student student = new Student(userId, name, email, password);
             double overall  = rs.getDouble("overall_progress");
