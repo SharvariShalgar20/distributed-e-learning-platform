@@ -85,7 +85,7 @@ public class UserService {
     }
 
     public List<User> getAllUsers(){
-        return new ArrayList<>(usersById.values());
+        return userRepository.findAll();
     }
 
     public List<Student> getAllStudents() {
