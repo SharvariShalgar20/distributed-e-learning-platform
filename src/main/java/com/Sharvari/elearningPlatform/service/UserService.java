@@ -101,7 +101,11 @@ public class UserService {
 
     public List<Instructor> getAllInstructors() {
         List<Instructor> list = new ArrayList<>();
-        for (User u : usersById.values()) if (u instanceof Instructor) list.add((Instructor) u);
+
+        for (User u : userRepository.findAll())
+            if (u instanceof Instructor)
+                list.add((Instructor) u);
+
         return list;
     }
 
