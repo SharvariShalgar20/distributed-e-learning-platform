@@ -90,7 +90,12 @@ public class UserService {
 
     public List<Student> getAllStudents() {
         List<Student> list = new ArrayList<>();
-        for (User u : usersById.values()) if (u instanceof Student) list.add((Student) u);
+
+        for (User u : userRepository.findAll()) {
+            if (u instanceof Student)
+                list.add((Student) u);
+        }
+
         return list;
     }
 
