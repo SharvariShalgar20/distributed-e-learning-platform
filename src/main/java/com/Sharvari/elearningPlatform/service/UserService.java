@@ -49,8 +49,12 @@ public class UserService {
 
     private void validateRegistrationInput(String name, String email, String password) {
         if (!InputValidator.isValidName(name))       throw new IllegalArgumentException("Name must be at least 2 characters.");
+
         if (!InputValidator.isValidEmail(email))     throw new IllegalArgumentException("Invalid email format.");
-        if (usersByEmail.containsKey(email.toLowerCase())) throw new IllegalArgumentException("Email already registered.");
+
+        if (userRepository.existsByEmail(email))
+            throw new IllegalArgumentException("Email already registered.");
+
         if (!InputValidator.isValidPassword(password)) throw new IllegalArgumentException("Password must be at least 6 characters.");
     }
 
