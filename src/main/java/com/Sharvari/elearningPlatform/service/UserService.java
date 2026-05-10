@@ -73,10 +73,11 @@ public class UserService {
     }
 
 
+    // ── Lookups ──────────────────────────────────────────────────────────────
+
     public User findById(String userId) {
-        User user = usersById.get(userId);
-        if (user == null) throw new UserNotFoundException("User not found: " + userId);
-        return user;
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + userId));
     }
 
     public Optional<User> findByEmail(String email) {
