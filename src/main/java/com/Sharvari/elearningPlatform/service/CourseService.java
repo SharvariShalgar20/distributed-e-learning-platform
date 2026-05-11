@@ -12,8 +12,6 @@ import java.util.*;
 
 public class CourseService {
 
-    private final Map<String, Course> coursesById = new HashMap<>();
-
     private final CourseRepositoryImpl courseRepository;
     private final UserService userService;
 
@@ -113,6 +111,24 @@ public class CourseService {
         courseRepository.delete(courseId);
 
         System.out.println("  ✔ Course deleted: " + courseId);
+    }
+
+
+    // ── Enrollment helpers (called by EnrollmentService) ─────────────────────
+
+    /**
+     * Marks the student as enrolled in the course row (in-memory model sync).
+     * The authoritative record is the enrollments table; this keeps the Course
+     * object's enrolledStudentIds list current within a single session.
+     */
+
+    public void syncEnrollStudent(Course course, String studentId) {
+        course.enrollStudent(studentId);
+        // No DB update needed here – enrollments table owns this data.
+    }
+
+    public void syncUnenrollStudent(Course course, String studentId) {
+        course.unenrollStudent(studentId);
     }
 
     // ── Internal ─────────────────────────────────────────────────────────────
