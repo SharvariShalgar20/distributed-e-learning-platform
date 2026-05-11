@@ -97,6 +97,9 @@ public class CourseService {
         if (InputValidator.isNotBlank(description)) course.setDescription(description);
         if (InputValidator.isNotBlank(category))    course.setCategory(category);
         if (durationHours > 0)                      course.setDurationHours(durationHours);
+
+        courseRepository.update(course);
+
         System.out.println("  ✔ Course updated: " + courseId);
     }
 
