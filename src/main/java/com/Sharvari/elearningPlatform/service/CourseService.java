@@ -6,15 +6,19 @@ import com.Sharvari.elearningPlatform.model.Instructor;
 import com.Sharvari.elearningPlatform.model.User;
 import com.Sharvari.elearningPlatform.util.IdGenerator;
 import com.Sharvari.elearningPlatform.util.InputValidator;
+import com.Sharvari.elearningPlatform.repository.impl.CourseRepositoryImpl;
 
 import java.util.*;
 
 public class CourseService {
 
     private final Map<String, Course> coursesById = new HashMap<>();
+
+    private final CourseRepositoryImpl courseRepository;
     private final UserService userService;
 
-    public CourseService(UserService userService) {
+    public CourseService(CourseRepositoryImpl courseRepository, UserService userService) {
+        this.courseRepository = courseRepository;
         this.userService = userService;
     }
 
