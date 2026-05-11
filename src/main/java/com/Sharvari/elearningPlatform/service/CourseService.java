@@ -22,6 +22,8 @@ public class CourseService {
         this.userService = userService;
     }
 
+    // ── Create ───────────────────────────────────────────────────────────────
+
     public Course createCourse(String instructorId, String title, String description,
                                String category, int durationHours) {
         User user = userService.findById(instructorId);
@@ -40,11 +42,13 @@ public class CourseService {
         return course;
     }
 
+    // ── Publish / Unpublish ──────────────────────────────────────────────────
 
     public void publishCourse(String instructorId, String courseId) {
         Course course = findById(courseId);
         verifyOwnership(instructorId, course);
         course.publish();
+        courseRepository.update(course);
         System.out.println("  ✔ Course published: " + course.getTitle());
     }
 
@@ -52,20 +56,17 @@ public class CourseService {
         Course course = findById(courseId);
         verifyOwnership(instructorId, course);
         course.unpublish();
+        courseRepository.update(course);
         System.out.println("  ✔ Course set to Draft: " + course.getTitle());
     }
 
+    // ── Read ─────────────────────────────────────────────────────────────────
+
     public Course findById(String courseId) {
-        Course course = coursesById.get(courseId);
-        if (course == null) throw new CourseNotFoundException("Course not found: " + courseId);
-        return course;
+        return courseRepository.findById(courseId)
+                .orElseThrow(() -> new CourseNotFoundException("Course not found: " + courseId));
     }
 
-
-    private void verifyOwnership(String instructorId, Course course) {
-        if (!course.getInstructorId().equals(instructorId))
-            throw new SecurityException("You do not own this course.");
-    }
 
     public void updateCourse(String instructorId, String courseId, String title,
                              String description, String category, int durationHours) {
@@ -114,6 +115,13 @@ public class CourseService {
         for (Course c : coursesById.values())
             if (c.isPublished() && c.getCategory().equalsIgnoreCase(category)) list.add(c);
         return list;
+    }
+
+    // ── Internal ─────────────────────────────────────────────────────────────
+
+    private void verifyOwnership(String instructorId, Course course) {
+        if (!course.getInstructorId().equals(instructorId))
+            throw new SecurityException("You do not own this course.");
     }
 
 }
