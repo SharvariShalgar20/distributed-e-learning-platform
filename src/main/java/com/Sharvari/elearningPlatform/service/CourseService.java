@@ -103,11 +103,15 @@ public class CourseService {
         System.out.println("  ✔ Course updated: " + courseId);
     }
 
+    // ── Delete ───────────────────────────────────────────────────────────────
+
     public void deleteCourse(String instructorId, String courseId) {
         Course course = findById(courseId);
         verifyOwnership(instructorId, course);
-        coursesById.remove(courseId);
-        ((Instructor) userService.findById(instructorId)).removeCourse(courseId);
+
+        // FK CASCADE removes quizzes, enrollments
+        courseRepository.delete(courseId);
+
         System.out.println("  ✔ Course deleted: " + courseId);
     }
 
