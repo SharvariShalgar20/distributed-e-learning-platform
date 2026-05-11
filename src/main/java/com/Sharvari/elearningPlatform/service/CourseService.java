@@ -33,8 +33,9 @@ public class CourseService {
 
         String id = IdGenerator.generateCourseId();
         Course course = new Course(id, title, description, instructorId, category, durationHours);
-        coursesById.put(id, course);
-        ((Instructor) user).addCourse(id);
+
+        courseRepository.save(course);
+
         System.out.println("  ✔ Course created! ID: " + id + " | " + title);
         return course;
     }
