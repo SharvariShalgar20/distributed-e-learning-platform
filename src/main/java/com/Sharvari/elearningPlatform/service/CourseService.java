@@ -67,6 +67,27 @@ public class CourseService {
                 .orElseThrow(() -> new CourseNotFoundException("Course not found: " + courseId));
     }
 
+    public List<Course> getAllCourses() {
+        return courseRepository.findAll();
+    }
+
+    public List<Course> getPublishedCourses() {
+        return courseRepository.findPublished();
+    }
+
+    public List<Course> getCoursesByInstructor(String instructorId) {
+        return courseRepository.findByInstructorId(instructorId);
+    }
+
+    public List<Course> searchCoursesByTitle(String keyword) {
+        return courseRepository.findPublishedByTitleKeyword(keyword);
+    }
+
+    public List<Course> searchCoursesByCategory(String category) {
+        return courseRepository.findPublishedByCategory(category);
+    }
+
+    // ── Update ───────────────────────────────────────────────────────────────
 
     public void updateCourse(String instructorId, String courseId, String title,
                              String description, String category, int durationHours) {
@@ -85,36 +106,6 @@ public class CourseService {
         coursesById.remove(courseId);
         ((Instructor) userService.findById(instructorId)).removeCourse(courseId);
         System.out.println("  ✔ Course deleted: " + courseId);
-    }
-
-    public List<Course> getAllCourses() {
-        return new ArrayList<>(coursesById.values());
-    }
-
-    public List<Course> getPublishedCourses() {
-        List<Course> list = new ArrayList<>();
-        for (Course c : coursesById.values()) if (c.isPublished()) list.add(c);
-        return list;
-    }
-
-    public List<Course> getCoursesByInstructor(String instructorId) {
-        List<Course> list = new ArrayList<>();
-        for (Course c : coursesById.values()) if (c.getInstructorId().equals(instructorId)) list.add(c);
-        return list;
-    }
-
-    public List<Course> searchCoursesByTitle(String keyword) {
-        List<Course> list = new ArrayList<>();
-        for (Course c : coursesById.values())
-            if (c.isPublished() && c.getTitle().toLowerCase().contains(keyword.toLowerCase())) list.add(c);
-        return list;
-    }
-
-    public List<Course> searchCoursesByCategory(String category) {
-        List<Course> list = new ArrayList<>();
-        for (Course c : coursesById.values())
-            if (c.isPublished() && c.getCategory().equalsIgnoreCase(category)) list.add(c);
-        return list;
     }
 
     // ── Internal ─────────────────────────────────────────────────────────────
