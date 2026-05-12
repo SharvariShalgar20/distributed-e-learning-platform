@@ -45,12 +45,7 @@ public class EnrollmentService {
     }
 
     public Optional<Enrollment> findByStudentAndCourse(String studentId, String courseId) {
-        for (Enrollment e : enrollmentsById.values())
-            if (e.getStudentId().equals(studentId) && e.getCourseId().equals(courseId)
-                    && !e.getStatus().equals("DROPPED"))
-                return Optional.of(e);
-
-        return Optional.empty();
+        return enrollmentRepository.findByStudentAndCourse(studentId, courseId);
     }
 
     public void dropCourse(String studentId, String courseId) {
