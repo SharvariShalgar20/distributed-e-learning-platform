@@ -49,18 +49,30 @@ public class EnrollmentService {
         return enrollment;
     }
 
-    public Optional<Enrollment> findByStudentAndCourse(String studentId, String courseId) {
-        return enrollmentRepository.findByStudentAndCourse(studentId, courseId);
-    }
+    // ── Drop ────────────────────────────────────────────────────────────
 
     public void dropCourse(String studentId, String courseId) {
         Enrollment enrollment = findByStudentAndCourse(studentId, courseId)
                 .orElseThrow(() -> new IllegalStateException("Enrollment not found."));
+
         enrollment.drop();
-        ((Student) userService.findById(studentId)).unenrollCourse(courseId);
+
+        String enrollmentId = enrollment.getEnrollmentId();
+        enrollmentRepository.delete(enrollmentId);
+
+        User user = userService.findById(studentId);
+        if (user instanceof Student)
+            ((Student) user).unenrollCourse(courseId);
         courseService.findById(courseId).unenrollStudent(studentId);
+
         System.out.println("  ✔ Course dropped: " + courseId);
     }
+
+    public Optional<Enrollment> findByStudentAndCourse(String studentId, String courseId) {
+        return enrollmentRepository.findByStudentAndCourse(studentId, courseId);
+    }
+
+
 
     public void updateProgress(String studentId, String courseId, double progress) {
         Enrollment enrollment = findByStudentAndCourse(studentId, courseId)
