@@ -68,35 +68,49 @@ public class EnrollmentService {
         System.out.println("  ✔ Course dropped: " + courseId);
     }
 
-    public Optional<Enrollment> findByStudentAndCourse(String studentId, String courseId) {
-        return enrollmentRepository.findByStudentAndCourse(studentId, courseId);
-    }
-
-
+    // ── Progress ───────────────────────────────────────────────────────────
 
     public void updateProgress(String studentId, String courseId, double progress) {
+
         Enrollment enrollment = findByStudentAndCourse(studentId, courseId)
                 .orElseThrow(() -> new IllegalStateException("Enrollment not found."));
+
         enrollment.updateProgress(progress);
+        enrollmentRepository.update(enrollment);
         recalculateStudentProgress(studentId);
+
         System.out.printf("  ✔ Progress updated to %.1f%%%n", progress);
+
         if (progress == 100.0)
             System.out.println("  🎉 Congratulations! Course completed!");
     }
 
     private void recalculateStudentProgress(String studentId) {
         List<Enrollment> list = getEnrollmentsByStudent(studentId);
-        double total = 0; int count = 0;
+
+        double total = 0;
+        int count = 0;
+
         for (Enrollment e : list) {
             if (!e.getStatus().equals("DROPPED")) {
                 total += e.getProgress();
                 count++;
             }
         }
+
         User user = userService.findById(studentId);
-        if (user instanceof Student && count > 0)
-            ((Student) user).setOverallProgress(total / count);
+        if (user instanceof Student student && count > 0) {
+            student.setOverallProgress(total / count);
+            // Persist updated overall progress to DB
+
+        }
     }
+
+
+    public Optional<Enrollment> findByStudentAndCourse(String studentId, String courseId) {
+        return enrollmentRepository.findByStudentAndCourse(studentId, courseId);
+    }
+
 
     public List<Enrollment> getEnrollmentsByStudent(String studentId) {
         List<Enrollment> list = new ArrayList<>();
