@@ -102,6 +102,7 @@ public class EnrollmentService {
         if (user instanceof Student student && count > 0) {
             student.setOverallProgress(total / count);
             // Persist updated overall progress to DB
+            userService.updateOverallProgress(student);
 
         }
     }
