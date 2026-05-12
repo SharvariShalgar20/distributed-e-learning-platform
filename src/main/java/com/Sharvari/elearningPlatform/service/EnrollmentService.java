@@ -24,6 +24,8 @@ public class EnrollmentService {
         this.courseService = courseService;
     }
 
+    // ── Enroll ───────────────────────────────────────────────────────────
+
     public Enrollment enrollStudent(String studentId, String courseId) {
         User user = userService.findById(studentId);
         if (!(user instanceof Student)) throw new IllegalArgumentException("Only students can enroll.");
@@ -36,9 +38,12 @@ public class EnrollmentService {
 
         String id = IdGenerator.generateEnrollmentId();
         Enrollment enrollment = new Enrollment(id, studentId, courseId);
-        enrollmentsById.put(id, enrollment);
+
+        enrollmentRepository.save(enrollment);
+
         ((Student) user).enrollCourse(courseId);
         course.enrollStudent(studentId);
+
         System.out.println("  ✔ Enrolled successfully! ID: " + id + " | Course: " + course.getTitle());
 
         return enrollment;
