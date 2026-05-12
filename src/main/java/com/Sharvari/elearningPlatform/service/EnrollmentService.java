@@ -4,6 +4,7 @@ import com.Sharvari.elearningPlatform.model.Course;
 import com.Sharvari.elearningPlatform.model.Enrollment;
 import com.Sharvari.elearningPlatform.model.Student;
 import com.Sharvari.elearningPlatform.model.User;
+import com.Sharvari.elearningPlatform.repository.impl.EnrollmentRepositoryImpl;
 import com.Sharvari.elearningPlatform.util.IdGenerator;
 
 import java.util.*;
@@ -11,10 +12,14 @@ import java.util.*;
 public class EnrollmentService {
 
     private final Map<String, Enrollment> enrollmentsById = new HashMap<>();
+
+    private final EnrollmentRepositoryImpl enrollmentRepository;
     private final UserService userService;
     private final CourseService courseService;
 
-    public EnrollmentService(UserService userService, CourseService courseService) {
+    public EnrollmentService(EnrollmentRepositoryImpl enrollmentRepository, UserService userService, CourseService courseService) {
+
+        this.enrollmentRepository = enrollmentRepository;
         this.userService   = userService;
         this.courseService = courseService;
     }
