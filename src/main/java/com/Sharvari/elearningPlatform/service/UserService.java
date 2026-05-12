@@ -131,6 +131,10 @@ public class UserService {
         System.out.println("  ✔ Password changed successfully.");
     }
 
+    public void updateOverallProgress(Student student) {
+        userRepository.update(student);
+    }
+
     public void deleteUser(String userId) {
         findById(userId);                 // throws if not found
         userRepository.delete(userId);
