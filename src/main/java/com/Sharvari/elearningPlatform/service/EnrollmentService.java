@@ -107,6 +107,8 @@ public class EnrollmentService {
         }
     }
 
+    // ── Queries ────────────────────────────────────────────────────────────
+
 
     public Optional<Enrollment> findByStudentAndCourse(String studentId, String courseId) {
         return enrollmentRepository.findByStudentAndCourse(studentId, courseId);
@@ -114,9 +116,7 @@ public class EnrollmentService {
 
 
     public List<Enrollment> getEnrollmentsByStudent(String studentId) {
-        List<Enrollment> list = new ArrayList<>();
-        for (Enrollment e : enrollmentsById.values()) if (e.getStudentId().equals(studentId)) list.add(e);
-        return list;
+        return enrollmentRepository.findByStudentId(studentId);
     }
 
     public List<Enrollment> getEnrollmentsByCourse(String courseId) {
