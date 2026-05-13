@@ -114,15 +114,12 @@ public class EnrollmentService {
         return enrollmentRepository.findByStudentAndCourse(studentId, courseId);
     }
 
-
     public List<Enrollment> getEnrollmentsByStudent(String studentId) {
         return enrollmentRepository.findByStudentId(studentId);
     }
 
     public List<Enrollment> getEnrollmentsByCourse(String courseId) {
-        List<Enrollment> list = new ArrayList<>();
-        for (Enrollment e : enrollmentsById.values()) if (e.getCourseId().equals(courseId)) list.add(e);
-        return list;
+        return enrollmentRepository.findByCourseId(courseId);
     }
 
     public void displayStudentProgress(String studentId) {
