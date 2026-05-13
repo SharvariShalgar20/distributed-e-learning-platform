@@ -122,14 +122,23 @@ public class EnrollmentService {
         return enrollmentRepository.findByCourseId(courseId);
     }
 
+    // ── Display ──────────────────────────────────────────────────────
+
     public void displayStudentProgress(String studentId) {
         List<Enrollment> enrollments = getEnrollmentsByStudent(studentId);
-        if (enrollments.isEmpty()) { System.out.println("  No enrollments found."); return; }
+
+        if (enrollments.isEmpty()) {
+            System.out.println("  No enrollments found."); return;
+        }
+
         System.out.println("\n  ── Your Course Progress ──────────────────");
         for (Enrollment e : enrollments) {
             String title;
-            try { title = courseService.findById(e.getCourseId()).getTitle(); }
-            catch (Exception ex) { title = e.getCourseId(); }
+            try {
+                title = courseService.findById(e.getCourseId()).getTitle();
+            } catch (Exception ex) {
+                title = e.getCourseId();
+            }
             System.out.printf("  %-30s %s %.1f%% [%s]%n",
                     title, buildProgressBar(e.getProgress()), e.getProgress(), e.getStatus());
         }
@@ -139,7 +148,8 @@ public class EnrollmentService {
     private String buildProgressBar(double progress) {
         int filled = (int)(progress / 10);
         StringBuilder sb = new StringBuilder("[");
-        for (int i = 0; i < 10; i++) sb.append(i < filled ? "█" : "░");
+        for (int i = 0; i < 10; i++)
+            sb.append(i < filled ? "█" : "░");
         return sb.append("]").toString();
     }
 
