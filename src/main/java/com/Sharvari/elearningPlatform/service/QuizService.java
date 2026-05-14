@@ -9,11 +9,6 @@ import java.util.*;
 
 public class QuizService {
 
-    private final Map<String, Quiz> quizzesById = new HashMap<>();
-
-    // studentId -> quizId -> score%
-    private final Map<String, Map<String, Double>> quizScores = new HashMap<>();
-
     private final QuizRepositoryImpl quizRepository;
     private final UserService userService;
     private final CourseService courseService;
