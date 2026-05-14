@@ -151,17 +151,28 @@ public class QuizService {
         return percentage;
     }
 
-
+    // ── Scores display ───────────────────────────────────────────────────────
 
     public void displayStudentScores(String studentId) {
-        Map<String, Double> scores = quizScores.getOrDefault(studentId, new HashMap<>());
-        if (scores.isEmpty()) { System.out.println("  No quiz attempts found."); return; }
+        Map<String, Double> scores = quizRepository.findScoresByStudent(studentId);
+
+        if (scores.isEmpty()) {
+            System.out.println("  No quiz attempts found."); return;
+        }
+
         System.out.println("\n  ── Your Quiz Scores ────────────────────");
+
         for (Map.Entry<String, Double> e : scores.entrySet()) {
             String title;
-            try { title = findById(e.getKey()).getTitle(); } catch (Exception ex) { title = e.getKey(); }
+            try {
+                title = findById(e.getKey()).getTitle();
+            } catch (Exception ex) {
+                title = e.getKey();
+            }
+
             System.out.printf("  %-30s : %.1f%%%n", title, e.getValue());
         }
+
         System.out.println("  ────────────────────────────────────────");
     }
 
