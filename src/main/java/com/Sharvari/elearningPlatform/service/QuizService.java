@@ -3,23 +3,26 @@ package com.Sharvari.elearningPlatform.service;
 import com.Sharvari.elearningPlatform.model.*;
 import com.Sharvari.elearningPlatform.util.IdGenerator;
 import com.Sharvari.elearningPlatform.util.InputValidator;
+import com.Sharvari.elearningPlatform.repository.impl.QuizRepositoryImpl;
 
 import java.util.*;
 
 public class QuizService {
 
-    private final Map<String, Quiz> quizzesById = new HashMap<>();
-    // studentId -> quizId -> score%
-    private final Map<String, Map<String, Double>> quizScores = new HashMap<>();
-    private final UserService       userService;
-    private final CourseService     courseService;
+    private final QuizRepositoryImpl quizRepository;
+    private final UserService userService;
+    private final CourseService courseService;
     private final EnrollmentService enrollmentService;
 
-    public QuizService(UserService us, CourseService cs, EnrollmentService es) {
-        this.userService       = us;
-        this.courseService     = cs;
-        this.enrollmentService = es;
+
+    public QuizService(QuizRepositoryImpl quizRepository, UserService userService, CourseService courseService, EnrollmentService enrollmentService) {
+        this.quizRepository    = quizRepository;
+        this.userService       = userService;
+        this.courseService     = courseService;
+        this.enrollmentService = enrollmentService;
     }
+
+    // ── Create ─────────────────────────────────────────────────────────
 
     public Quiz createQuiz(String instructorId, String courseId, String title,
                            int timeLimitMinutes, double passingScore) {
@@ -31,16 +34,18 @@ public class QuizService {
         if (!course.getInstructorId().equals(instructorId)) throw new SecurityException("You do not own this course.");
 
         if (!InputValidator.isNotBlank(title))              throw new IllegalArgumentException("Quiz title cannot be blank.");
+
         if (!InputValidator.isValidPercentage(passingScore)) throw new IllegalArgumentException("Passing score must be 0-100.");
 
         String id = IdGenerator.generateQuizId();
         Quiz quiz = new Quiz(id, title, courseId, timeLimitMinutes, passingScore);
-        quizzesById.put(id, quiz);
+        quizRepository.save(quiz);
         course.addQuiz(id);
         System.out.println("  ✔ Quiz created! ID: " + id + " | " + title);
         return quiz;
     }
 
+    // ── Add Question ────────────────────────────────────────────────────
 
     public Question addQuestion(String instructorId, String quizId, String text,
                                 String[] options, char correctAnswer, int marks) {
@@ -55,16 +60,26 @@ public class QuizService {
 
         String qid = IdGenerator.generateQuestionId();
         Question question = new Question(qid, text, options, correctAnswer, marks);
+
+        quizRepository.saveQuestion(question, quizId);
         quiz.addQuestion(question);
+
         System.out.println("  ✔ Question added! ID: " + qid);
         return question;
     }
 
+    // ── Find ─────────────────────────────────────────────────────────
+
     public Quiz findById(String quizId) {
-        Quiz quiz = quizzesById.get(quizId);
-        if (quiz == null) throw new IllegalArgumentException("Quiz not found: " + quizId);
-        return quiz;
+        return quizRepository.findById(quizId)
+                .orElseThrow(() -> new IllegalArgumentException("Quiz not found: " + quizId));
     }
+
+    public List<Quiz> getQuizzesByCourse(String courseId) {
+        return quizRepository.findByCourseId(courseId);
+    }
+
+    // ── Attempt Quiz ───────────────────────────────────────────────────
 
     public double attemptQuiz(String studentId, String quizId, Scanner scanner) {
         User user = userService.findById(studentId);
@@ -98,8 +113,11 @@ public class QuizService {
 
             while (!"ABCD".contains(String.valueOf(answer))) {
                 System.out.print("  Your answer (A/B/C/D): ");
+
                 String input = scanner.nextLine().trim().toUpperCase();
+
                 if (!input.isEmpty()) answer = input.charAt(0);
+
                 if (!"ABCD".contains(String.valueOf(answer)))
                     System.out.println("  Invalid. Enter A, B, C, or D.");
             }
@@ -114,39 +132,54 @@ public class QuizService {
 
         double percentage = quiz.getTotalMarks() > 0 ? (scored * 100.0) / quiz.getTotalMarks() : 0.0;
 
-        quizScores.computeIfAbsent(studentId, k -> new HashMap<>()).put(quizId, percentage);
+        quizRepository.saveOrUpdateScore(studentId, quizId, percentage);
 
         System.out.println("\n══════════════════════════════════════════");
         System.out.printf("  RESULT: %d / %d marks (%.1f%%)%n", scored, quiz.getTotalMarks(), percentage);
-        if (quiz.isPassed(percentage)) System.out.println("  🏆 PASSED! Congratulations!");
-        else System.out.printf("  ✘ FAILED. Need %.0f%% to pass. Keep trying!%n", quiz.getPassingScore());
+
+        if (quiz.isPassed(percentage))
+            System.out.println("  🏆 PASSED! Congratulations!");
+        else
+            System.out.printf("  ✘ FAILED. Need %.0f%% to pass. Keep trying!%n", quiz.getPassingScore());
+
         System.out.println("══════════════════════════════════════════");
         return percentage;
     }
 
-    public List<Quiz> getQuizzesByCourse(String courseId) {
-        List<Quiz> list = new ArrayList<>();
-        for (Quiz q : quizzesById.values()) if (q.getCourseId().equals(courseId)) list.add(q);
-        return list;
-    }
+    // ── Scores display ───────────────────────────────────────────────────────
 
     public void displayStudentScores(String studentId) {
-        Map<String, Double> scores = quizScores.getOrDefault(studentId, new HashMap<>());
-        if (scores.isEmpty()) { System.out.println("  No quiz attempts found."); return; }
+        Map<String, Double> scores = quizRepository.findScoresByStudent(studentId);
+
+        if (scores.isEmpty()) {
+            System.out.println("  No quiz attempts found."); return;
+        }
+
         System.out.println("\n  ── Your Quiz Scores ────────────────────");
+
         for (Map.Entry<String, Double> e : scores.entrySet()) {
             String title;
-            try { title = findById(e.getKey()).getTitle(); } catch (Exception ex) { title = e.getKey(); }
+            try {
+                title = findById(e.getKey()).getTitle();
+            } catch (Exception ex) {
+                title = e.getKey();
+            }
+
             System.out.printf("  %-30s : %.1f%%%n", title, e.getValue());
         }
+
         System.out.println("  ────────────────────────────────────────");
     }
+
+    // ── Delete ──────────────────────────────────────────────────────────
 
     public void deleteQuiz(String instructorId, String quizId) {
         Quiz quiz = findById(quizId);
         Course course = courseService.findById(quiz.getCourseId());
+
         if (!course.getInstructorId().equals(instructorId)) throw new SecurityException("You do not own this quiz.");
-        quizzesById.remove(quizId);
+
+        quizRepository.delete(quizId);
         course.removeQuiz(quizId);
         System.out.println("  ✔ Quiz deleted: " + quizId);
     }
