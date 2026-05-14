@@ -176,11 +176,15 @@ public class QuizService {
         System.out.println("  ────────────────────────────────────────");
     }
 
+    // ── Delete ──────────────────────────────────────────────────────────
+
     public void deleteQuiz(String instructorId, String quizId) {
         Quiz quiz = findById(quizId);
         Course course = courseService.findById(quiz.getCourseId());
+
         if (!course.getInstructorId().equals(instructorId)) throw new SecurityException("You do not own this quiz.");
-        quizzesById.remove(quizId);
+
+        quizRepository.delete(quizId);
         course.removeQuiz(quizId);
         System.out.println("  ✔ Quiz deleted: " + quizId);
     }
