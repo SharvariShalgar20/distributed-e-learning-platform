@@ -73,10 +73,11 @@ public class QuizService {
         return question;
     }
 
+    // ── Find ─────────────────────────────────────────────────────────
+
     public Quiz findById(String quizId) {
-        Quiz quiz = quizzesById.get(quizId);
-        if (quiz == null) throw new IllegalArgumentException("Quiz not found: " + quizId);
-        return quiz;
+        return quizRepository.findById(quizId)
+                .orElseThrow(() -> new IllegalArgumentException("Quiz not found: " + quizId));
     }
 
     public double attemptQuiz(String studentId, String quizId, Scanner scanner) {
