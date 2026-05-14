@@ -80,6 +80,10 @@ public class QuizService {
                 .orElseThrow(() -> new IllegalArgumentException("Quiz not found: " + quizId));
     }
 
+    public List<Quiz> getQuizzesByCourse(String courseId) {
+        return quizRepository.findByCourseId(courseId);
+    }
+
     public double attemptQuiz(String studentId, String quizId, Scanner scanner) {
         User user = userService.findById(studentId);
         if (!(user instanceof Student)) throw new IllegalArgumentException("Only students can attempt quizzes.");
@@ -138,11 +142,7 @@ public class QuizService {
         return percentage;
     }
 
-    public List<Quiz> getQuizzesByCourse(String courseId) {
-        List<Quiz> list = new ArrayList<>();
-        for (Quiz q : quizzesById.values()) if (q.getCourseId().equals(courseId)) list.add(q);
-        return list;
-    }
+
 
     public void displayStudentScores(String studentId) {
         Map<String, Double> scores = quizScores.getOrDefault(studentId, new HashMap<>());
