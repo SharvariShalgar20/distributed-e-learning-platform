@@ -3,22 +3,28 @@ package com.Sharvari.elearningPlatform.service;
 import com.Sharvari.elearningPlatform.model.*;
 import com.Sharvari.elearningPlatform.util.IdGenerator;
 import com.Sharvari.elearningPlatform.util.InputValidator;
+import com.Sharvari.elearningPlatform.repository.impl.QuizRepositoryImpl;
 
 import java.util.*;
 
 public class QuizService {
 
     private final Map<String, Quiz> quizzesById = new HashMap<>();
+
     // studentId -> quizId -> score%
     private final Map<String, Map<String, Double>> quizScores = new HashMap<>();
-    private final UserService       userService;
-    private final CourseService     courseService;
+
+    private final QuizRepositoryImpl quizRepository;
+    private final UserService userService;
+    private final CourseService courseService;
     private final EnrollmentService enrollmentService;
 
-    public QuizService(UserService us, CourseService cs, EnrollmentService es) {
-        this.userService       = us;
-        this.courseService     = cs;
-        this.enrollmentService = es;
+
+    public QuizService(QuizRepositoryImpl quizRepository, UserService userService, CourseService courseService, EnrollmentService enrollmentService) {
+        this.quizRepository    = quizRepository;
+        this.userService       = userService;
+        this.courseService     = courseService;
+        this.enrollmentService = enrollmentService;
     }
 
     public Quiz createQuiz(String instructorId, String courseId, String title,

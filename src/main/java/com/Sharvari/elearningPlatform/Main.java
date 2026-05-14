@@ -4,6 +4,7 @@ import com.Sharvari.elearningPlatform.model.*;
 import com.Sharvari.elearningPlatform.repository.UserRepository;
 import com.Sharvari.elearningPlatform.repository.impl.CourseRepositoryImpl;
 import com.Sharvari.elearningPlatform.repository.impl.EnrollmentRepositoryImpl;
+import com.Sharvari.elearningPlatform.repository.impl.QuizRepositoryImpl;
 import com.Sharvari.elearningPlatform.repository.impl.UserRepositoryImpl;
 import com.Sharvari.elearningPlatform.service.*;
 
@@ -45,10 +46,11 @@ public class Main {
         UserRepositoryImpl userRepository = new UserRepositoryImpl();
         CourseRepositoryImpl courseRepository = new CourseRepositoryImpl();
         EnrollmentRepositoryImpl enrollmentRepository = new EnrollmentRepositoryImpl();
+        QuizRepositoryImpl quizRepository = new QuizRepositoryImpl();
         userService       = new UserService(userRepository);
         courseService     = new CourseService(courseRepository, userService);
         enrollmentService = new EnrollmentService(enrollmentRepository, userService, courseService);
-        quizService       = new QuizService(userService, courseService, enrollmentService);
+        quizService       = new QuizService(quizRepository, userService, courseService, enrollmentService);
     }
 
 
