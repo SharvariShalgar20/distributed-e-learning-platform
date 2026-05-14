@@ -37,11 +37,12 @@ public class QuizService {
         if (!course.getInstructorId().equals(instructorId)) throw new SecurityException("You do not own this course.");
 
         if (!InputValidator.isNotBlank(title))              throw new IllegalArgumentException("Quiz title cannot be blank.");
+
         if (!InputValidator.isValidPercentage(passingScore)) throw new IllegalArgumentException("Passing score must be 0-100.");
 
         String id = IdGenerator.generateQuizId();
         Quiz quiz = new Quiz(id, title, courseId, timeLimitMinutes, passingScore);
-        quizzesById.put(id, quiz);
+        quizRepository.save(quiz);
         course.addQuiz(id);
         System.out.println("  ✔ Quiz created! ID: " + id + " | " + title);
         return quiz;
