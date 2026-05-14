@@ -84,6 +84,8 @@ public class QuizService {
         return quizRepository.findByCourseId(courseId);
     }
 
+    // ── Attempt Quiz ───────────────────────────────────────────────────
+
     public double attemptQuiz(String studentId, String quizId, Scanner scanner) {
         User user = userService.findById(studentId);
         if (!(user instanceof Student)) throw new IllegalArgumentException("Only students can attempt quizzes.");
@@ -116,8 +118,11 @@ public class QuizService {
 
             while (!"ABCD".contains(String.valueOf(answer))) {
                 System.out.print("  Your answer (A/B/C/D): ");
+
                 String input = scanner.nextLine().trim().toUpperCase();
+
                 if (!input.isEmpty()) answer = input.charAt(0);
+
                 if (!"ABCD".contains(String.valueOf(answer)))
                     System.out.println("  Invalid. Enter A, B, C, or D.");
             }
@@ -132,12 +137,16 @@ public class QuizService {
 
         double percentage = quiz.getTotalMarks() > 0 ? (scored * 100.0) / quiz.getTotalMarks() : 0.0;
 
-        quizScores.computeIfAbsent(studentId, k -> new HashMap<>()).put(quizId, percentage);
+        quizRepository.saveOrUpdateScore(studentId, quizId, percentage);
 
         System.out.println("\n══════════════════════════════════════════");
         System.out.printf("  RESULT: %d / %d marks (%.1f%%)%n", scored, quiz.getTotalMarks(), percentage);
-        if (quiz.isPassed(percentage)) System.out.println("  🏆 PASSED! Congratulations!");
-        else System.out.printf("  ✘ FAILED. Need %.0f%% to pass. Keep trying!%n", quiz.getPassingScore());
+
+        if (quiz.isPassed(percentage))
+            System.out.println("  🏆 PASSED! Congratulations!");
+        else
+            System.out.printf("  ✘ FAILED. Need %.0f%% to pass. Keep trying!%n", quiz.getPassingScore());
+
         System.out.println("══════════════════════════════════════════");
         return percentage;
     }
