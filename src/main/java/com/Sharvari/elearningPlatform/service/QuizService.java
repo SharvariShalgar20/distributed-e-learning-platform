@@ -27,6 +27,8 @@ public class QuizService {
         this.enrollmentService = enrollmentService;
     }
 
+    // ── Create ─────────────────────────────────────────────────────────
+
     public Quiz createQuiz(String instructorId, String courseId, String title,
                            int timeLimitMinutes, double passingScore) {
 
@@ -48,6 +50,7 @@ public class QuizService {
         return quiz;
     }
 
+    // ── Add Question ────────────────────────────────────────────────────
 
     public Question addQuestion(String instructorId, String quizId, String text,
                                 String[] options, char correctAnswer, int marks) {
@@ -62,7 +65,10 @@ public class QuizService {
 
         String qid = IdGenerator.generateQuestionId();
         Question question = new Question(qid, text, options, correctAnswer, marks);
+
+        quizRepository.saveQuestion(question, quizId);
         quiz.addQuestion(question);
+
         System.out.println("  ✔ Question added! ID: " + qid);
         return question;
     }
