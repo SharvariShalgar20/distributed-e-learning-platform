@@ -27,8 +27,7 @@ The goal of this project is to **progressively evolve** from a basic console app
 
 The project follows a **layered architecture** with clear separation of concerns:
 
-```
-com.sharvari.elearningplatform
+```com.sharvari.elearningplatform
 │
 ├── model
 │   ├── User.java              ← Abstract base class (Abstraction + Inheritance)
@@ -46,10 +45,15 @@ com.sharvari.elearningplatform
 │   └── QuizService.java       ← Interface: quiz creation, question mgmt contract
 │
 ├── repository
-│   ├── UserRepository.java        ← Interface: reserved for JDBC layer
-│   ├── CourseRepository.java      ← Interface: reserved for JDBC layer
-│   ├── EnrollmentRepository.java  ← Interface: reserved for JDBC layer
-│   └── QuizRepository.java        ← Interface: reserved for JDBC layer
+│   ├── UserRepository.java        ← Interface: Data access contracts
+│   ├── CourseRepository.java      ← Interface: Data access contracts
+│   ├── EnrollmentRepository.java  ← Interface: Data access contracts
+│   ├── QuizRepository.java        ← Interface: Data access contracts
+│   └── impl
+│       ├── UserRepositoryImpl.java       ← Concrete implementation (In-memory / Future JDBC)
+│       ├── CourseRepositoryImpl.java     ← Concrete implementation (In-memory / Future JDBC)
+│       ├── EnrollmentRepositoryImpl.java ← Concrete implementation (In-memory / Future JDBC)
+│       └── QuizRepositoryImpl.java       ← Concrete implementation (In-memory / Future JDBC)
 │
 ├── exception
 │   ├── UserNotFoundException.java
@@ -57,13 +61,13 @@ com.sharvari.elearningplatform
 │   └── AuthenticationException.java
 │
 ├── util
+|   ├──DBConnection.java       
 │   ├── IdGenerator.java       ← Thread-safe auto-incrementing ID generator
 │   └── InputValidator.java    ← Email, password, name validation helpers
 │
 └── main
     └── Main.java              ← Application entry point + console menu UI
 ```
-
 ---
 
 ### 📌 Layer Explanation
@@ -156,13 +160,13 @@ java -cp out com.sharvari.elearningplatform.main.Main
 
 ## 🗺 Evolution Roadmap
 
-### ✅ Phase 1 — Core Java (Current)
+### ✅ Phase 1 — Core Java (Done)
 - Console-based UI
 - In-memory storage via Java Collections
 - Full OOP model with service/impl/repository layering
 - Interface-driven design ready for swapping implementations
 
-### 🔜 Phase 2 — JDBC + Database
+### ✅ Phase 2 — JDBC + Database (Done)
 - Implement `UserRepository`, `CourseRepository` etc. with JDBC
 - Connect to MySQL / PostgreSQL
 - Replace `HashMap` stores in `*ServiceImpl` with repository calls
