@@ -50,10 +50,10 @@ The project follows a **layered architecture** with clear separation of concerns
 │   ├── EnrollmentRepository.java  ← Interface: Data access contracts
 │   ├── QuizRepository.java        ← Interface: Data access contracts
 │   └── impl
-│       ├── UserRepositoryImpl.java       ← Concrete implementation (In-memory / Future JDBC)
-│       ├── CourseRepositoryImpl.java     ← Concrete implementation (In-memory / Future JDBC)
-│       ├── EnrollmentRepositoryImpl.java ← Concrete implementation (In-memory / Future JDBC)
-│       └── QuizRepositoryImpl.java       ← Concrete implementation (In-memory / Future JDBC)
+│       ├── UserRepositoryImpl.java       ← Concrete implementation (JDBC)
+│       ├── CourseRepositoryImpl.java     ← Concrete implementation (JDBC)
+│       ├── EnrollmentRepositoryImpl.java ← Concrete implementation (JDBC)
+│       └── QuizRepositoryImpl.java       ← Concrete implementation (JDBC)
 │
 ├── exception
 │   ├── UserNotFoundException.java
